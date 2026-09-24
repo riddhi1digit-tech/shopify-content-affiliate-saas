@@ -3,7 +3,7 @@ services:
     name: content-affiliate-hub
     runtime: docker
     plan: free
-    healthCheckPath: /affiliate-login
+    healthCheckPath: /health
     autoDeployTrigger: commit
     envVars:
       - key: NODE_ENV
