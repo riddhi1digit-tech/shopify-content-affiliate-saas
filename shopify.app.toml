@@ -2,7 +2,7 @@
 
 client_id = "64eeb5123668eb85c931900375d47fbb"
 name = "Content Affiliate Hub"
-application_url = "https://shopify.dev/apps/default-app-home"
+application_url = "https://content-affiliate-hub.onrender.com"
 embedded = true
 
 [build]
@@ -37,7 +37,11 @@ api_version = "2026-10"
 scopes = "read_discounts,read_metaobjects,read_orders,read_products,write_app_proxy,write_discounts,write_metaobjects,write_products"
 
 [auth]
-redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+redirect_urls = [
+  "https://content-affiliate-hub.onrender.com/auth/callback",
+  "https://content-affiliate-hub.onrender.com/auth/shopify/callback",
+  "https://content-affiliate-hub.onrender.com/api/auth/callback"
+]
 
 [app_proxy]
 url = "/api/affiliate"
