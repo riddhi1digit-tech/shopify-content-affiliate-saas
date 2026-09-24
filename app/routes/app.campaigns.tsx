@@ -99,7 +99,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       ...campaign,
       commissionValue: campaign.commissionValue.toString(),
     })),
-    themeEditorUrl: `https://${store.shopDomain}/admin/themes/current/editor?template=product&addAppBlockId=${apiKey}/coupon-banner&target=newAppsSection`,
+    themeEditorUrl: `https://${store.shopDomain}/admin/themes/current/editor?template=index&addAppBlockId=${apiKey}/coupon-banner&target=newAppsSection`,
   };
 };
 
