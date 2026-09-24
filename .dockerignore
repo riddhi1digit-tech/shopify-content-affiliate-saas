@@ -1,0 +1,9 @@
+.cache
+build
+node_modules
+.git
+.env
+.env.*
+!.env.example
+.shopify
+.react-router

@@ -1,0 +1,7 @@
+name = "React Router"
+roles = ["frontend", "backend"]
+webhooks_path = "/webhooks/app/uninstalled"
+
+[commands]
+predev = "node --env-file-if-exists=.env scripts/database-setup.mjs generate"
+dev = "node --env-file-if-exists=.env scripts/database-setup.mjs init && npm exec react-router dev"

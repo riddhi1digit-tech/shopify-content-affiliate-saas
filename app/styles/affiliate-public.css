@@ -1,0 +1,412 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.affiliate-shell {
+  --affiliate-ink: #17211b;
+  --affiliate-muted: #637068;
+  --affiliate-border: #dfe5e1;
+  --affiliate-surface: #ffffff;
+  --affiliate-accent: #16794b;
+  --affiliate-accent-dark: #0e5f39;
+  box-sizing: border-box;
+  color: var(--affiliate-ink);
+  min-height: 100vh;
+}
+
+.affiliate-shell *, .affiliate-shell *::before, .affiliate-shell *::after { box-sizing: border-box; }
+.affiliate-shell h1, .affiliate-shell h2, .affiliate-shell h3, .affiliate-shell p { margin-top: 0; }
+.affiliate-shell h1 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 12px; }
+.affiliate-shell h2 { font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 0; }
+.affiliate-shell h3 { font-size: 1rem; margin-bottom: 0; }
+
+.affiliate-auth-shell {
+  align-items: center;
+  background: radial-gradient(circle at top left, #e3f4e9 0, transparent 35%), #f6f8f6;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.affiliate-auth-card {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--affiliate-border);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(24, 54, 37, 0.1);
+  max-width: 520px;
+  padding: clamp(28px, 6vw, 48px);
+  width: 100%;
+}
+
+.affiliate-brand-mark {
+  align-items: center;
+  background: var(--affiliate-ink);
+  border-radius: 12px;
+  color: white;
+  display: flex;
+  font-size: 0.8rem;
+  font-weight: 750;
+  height: 42px;
+  justify-content: center;
+  margin-bottom: 28px;
+  width: 42px;
+}
+
+.affiliate-eyebrow { color: var(--affiliate-accent); font-size: 0.75rem; font-weight: 750; letter-spacing: 0.1em; margin-bottom: 9px; text-transform: uppercase; }
+.affiliate-lead, .affiliate-muted, .affiliate-helper { color: var(--affiliate-muted); line-height: 1.6; }
+.affiliate-lead { margin-bottom: 28px; }
+.affiliate-helper { font-size: 0.9rem; }
+
+.affiliate-form { display: grid; gap: 18px; }
+.affiliate-form label { display: grid; font-size: 0.85rem; font-weight: 650; gap: 7px; }
+.affiliate-form input {
+  background: #fff;
+  border: 1px solid #cbd4ce;
+  border-radius: 10px;
+  color: var(--affiliate-ink);
+  font: inherit;
+  min-height: 46px;
+  outline: none;
+  padding: 0 13px;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+.affiliate-form input:focus { border-color: var(--affiliate-accent); box-shadow: 0 0 0 3px rgba(22, 121, 75, 0.13); }
+.affiliate-token-form { background: #f2f8f4; border: 1px solid #d8eadf; border-radius: 14px; padding: 18px; }
+.affiliate-token-form p { color: var(--affiliate-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 0; }
+
+.affiliate-button {
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  min-height: 43px;
+  padding: 0 17px;
+  transition: background 150ms, transform 150ms;
+}
+.affiliate-button:hover { transform: translateY(-1px); }
+.affiliate-button:disabled { cursor: wait; opacity: 0.6; transform: none; }
+.affiliate-button--primary { background: var(--affiliate-accent); color: #fff; }
+.affiliate-button--primary:hover { background: var(--affiliate-accent-dark); }
+.affiliate-button--secondary { background: #fff; border: 1px solid var(--affiliate-border); color: var(--affiliate-ink); }
+.affiliate-button--compact { align-self: flex-start; min-height: 38px; }
+
+.affiliate-divider { align-items: center; color: #879189; display: flex; font-size: 0.75rem; gap: 12px; margin: 28px 0 18px; text-transform: uppercase; }
+.affiliate-divider::before, .affiliate-divider::after { background: var(--affiliate-border); content: ""; flex: 1; height: 1px; }
+.affiliate-security-note { color: #879189; font-size: 0.75rem; margin: 22px 0 0; text-align: center; }
+.affiliate-alert { border-radius: 10px; font-size: 0.875rem; line-height: 1.5; margin-bottom: 20px; padding: 12px 14px; }
+.affiliate-alert--error { background: #fff0ef; color: #9d261f; }
+.affiliate-alert--success { background: #edf8f0; color: #16633c; }
+
+.affiliate-portal-shell { background: #f5f7f5; padding: 44px max(20px, calc((100vw - 1060px) / 2)) 72px; }
+.affiliate-portal-header { align-items: flex-start; display: flex; justify-content: space-between; margin-bottom: 30px; }
+.affiliate-portal-header .affiliate-lead { margin-bottom: 0; }
+.affiliate-stat-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); margin-bottom: 20px; }
+.affiliate-stat-card, .affiliate-panel { background: var(--affiliate-surface); border: 1px solid var(--affiliate-border); border-radius: 16px; box-shadow: 0 4px 16px rgba(24, 54, 37, 0.04); }
+.affiliate-stat-card { display: grid; gap: 7px; padding: 22px; }
+.affiliate-stat-card span { color: var(--affiliate-muted); font-size: 0.82rem; font-weight: 650; }
+.affiliate-stat-card strong { font-size: 2rem; letter-spacing: -0.04em; }
+.affiliate-stat-card small { color: #879189; }
+.affiliate-panel { margin-top: 20px; padding: 26px; }
+.affiliate-panel-heading { align-items: center; display: flex; justify-content: space-between; margin-bottom: 18px; }
+.affiliate-panel .affiliate-muted { font-size: 0.875rem; }
+.affiliate-earnings-list { display: grid; gap: 10px; }
+.affiliate-earning-row { align-items: center; background: #f8faf8; border-radius: 10px; display: flex; justify-content: space-between; padding: 13px 14px; }
+.affiliate-badge { border-radius: 999px; display: inline-flex; font-size: 0.7rem; font-weight: 750; letter-spacing: 0.04em; padding: 5px 9px; }
+.affiliate-badge--active, .affiliate-badge--approved, .affiliate-badge--paid { background: #e4f5e9; color: #12633a; }
+.affiliate-badge--pending { background: #fff3cf; color: #765500; }
+.affiliate-badge--reversed, .affiliate-badge--rejected { background: #fee9e7; color: #9d261f; }
+.affiliate-campaign-list { display: grid; gap: 14px; }
+.affiliate-campaign-card { background: #f8faf8; border: 1px solid #e7ebe8; border-radius: 13px; display: grid; gap: 14px; padding: 18px; }
+.affiliate-campaign-title { align-items: center; display: flex; justify-content: space-between; }
+.affiliate-coupon { color: var(--affiliate-muted); font-size: 0.85rem; margin-bottom: 0; }
+.affiliate-coupon strong { background: #edf2ee; border-radius: 6px; color: var(--affiliate-ink); margin-left: 5px; padding: 4px 7px; }
+.affiliate-link { color: var(--affiliate-accent-dark); font-size: 0.84rem; overflow-wrap: anywhere; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.affiliate-empty { color: var(--affiliate-muted); margin-bottom: 0; }
+
+@media (max-width: 720px) {
+  .affiliate-portal-shell { padding-top: 28px; }
+  .affiliate-portal-header { align-items: stretch; flex-direction: column; gap: 20px; }
+  .affiliate-portal-header .affiliate-button { width: 100%; }
+  .affiliate-stat-grid { grid-template-columns: 1fr; }
+  .affiliate-panel { padding: 20px; }
+}
+
+/* Embedded content workflow */
+.merchant-content-workflow { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
+.merchant-workflow-hero { align-items: center; background: linear-gradient(130deg, #eff8f2, #f9faf9); border: 1px solid #dbe9df; border-radius: 16px; display: flex; justify-content: space-between; padding: 24px; }
+.merchant-workflow-hero h2 { font-size: 1.35rem; letter-spacing: -0.025em; margin: 0 0 7px; }
+.merchant-workflow-hero p:not(.merchant-eyebrow) { color: #667269; font-size: 0.82rem; line-height: 1.5; margin: 0; max-width: 610px; }
+.merchant-workflow-steps { align-items: center; display: flex; flex: 0 0 auto; gap: 8px; margin-left: 24px; }
+.merchant-workflow-steps span { align-items: center; display: grid; gap: 4px; justify-items: center; }
+.merchant-workflow-steps b { align-items: center; background: #dceee2; border-radius: 50%; color: #14633b; display: flex; font-size: 0.7rem; height: 30px; justify-content: center; width: 30px; }
+.merchant-workflow-steps small { color: #5f6b62; font-size: 0.67rem; font-weight: 650; }
+.merchant-workflow-steps i { color: #8fa098; font-style: normal; margin-bottom: 16px; }
+.merchant-content-editor { background: #fff; border: 1px solid #e0e5e1; border-radius: 16px; overflow: hidden; }
+.merchant-content-editor-head { align-items: flex-start; border-bottom: 1px solid #e8ece9; display: flex; justify-content: space-between; padding: 19px 21px; }
+.merchant-content-editor-head h3 { font-size: 1rem; margin: 0 0 5px; }
+.merchant-content-editor-head small { color: #7a857d; font-size: 0.72rem; }
+.merchant-content-status { border-radius: 999px; font-size: 0.68rem; font-weight: 750; letter-spacing: 0.035em; padding: 5px 9px; }
+.merchant-content-status--no_draft { background: #edf0ee; color: #626d65; }
+.merchant-content-status--draft { background: #fff3cf; color: #795900; }
+.merchant-content-status--approved { background: #e7f5eb; color: #17663e; }
+.merchant-content-status--published { background: #e7effb; color: #24558c; }
+.merchant-content-form { display: grid; gap: 16px; padding: 20px 21px; }
+.merchant-content-form label { color: #4f5a52; display: grid; font-size: 0.77rem; font-weight: 650; gap: 7px; }
+.merchant-content-form label em { color: #89928b; font-size: 0.65rem; font-style: normal; font-weight: 500; margin-left: 4px; text-transform: uppercase; }
+.merchant-content-form input, .merchant-content-form textarea { background: #fff; border: 1px solid #cdd5cf; border-radius: 9px; color: #202520; font: inherit; outline: none; padding: 10px 11px; resize: vertical; width: 100%; }
+.merchant-content-form input { min-height: 42px; }
+.merchant-content-form textarea { line-height: 1.5; min-height: 150px; }
+.merchant-content-form input:focus, .merchant-content-form textarea:focus { border-color: #16804d; box-shadow: 0 0 0 3px rgba(22, 128, 77, 0.12); }
+.merchant-content-actions { align-items: center; border-top: 1px solid #e9ecea; display: flex; justify-content: space-between; padding-top: 16px; }
+.merchant-content-actions > div { display: flex; gap: 8px; }
+.merchant-button--approve { background: #e8f3eb; color: #125e38; }
+.merchant-button--approve:hover { background: #dcece1; }
+
+@media (max-width: 700px) {
+  .merchant-workflow-hero { align-items: stretch; flex-direction: column; gap: 20px; }
+  .merchant-workflow-steps { justify-content: flex-start; margin-left: 0; }
+  .merchant-content-actions { align-items: stretch; flex-direction: column; gap: 10px; }
+  .merchant-content-actions > div { align-items: stretch; flex-direction: column; }
+}
+
+/* Embedded merchant affiliate dashboard */
+.merchant-affiliate-dashboard { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
+.merchant-affiliate-selector { align-items: center; background: linear-gradient(130deg, #eff8f2, #f9faf9); border: 1px solid #dbe9df; border-radius: 16px; display: flex; justify-content: space-between; padding: 23px; }
+.merchant-affiliate-selector h2 { font-size: 1.35rem; letter-spacing: -0.025em; margin: 0 0 7px; }
+.merchant-affiliate-selector p:not(.merchant-eyebrow) { color: #667269; font-size: 0.8rem; margin: 0; }
+.merchant-selector-form { align-items: end; display: flex; gap: 9px; margin-left: 24px; }
+.merchant-selector-form label { color: #526057; display: grid; font-size: 0.7rem; font-weight: 650; gap: 5px; min-width: 220px; }
+.merchant-selector-form select { background: #fff; border: 1px solid #cdd5cf; border-radius: 9px; font: inherit; min-height: 39px; padding: 0 10px; }
+.merchant-profile-strip { align-items: center; background: #fff; border: 1px solid #e0e5e1; border-radius: 14px; display: flex; gap: 13px; padding: 16px 18px; }
+.merchant-avatar--large { border-radius: 12px; height: 46px; width: 46px; }
+.merchant-profile-name { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.merchant-profile-name h3 { font-size: 1rem; margin: 0; }
+.merchant-profile-strip p { color: #778179; font-size: 0.73rem; margin: 5px 0 0; }
+.merchant-profile-strip code { background: #eef2ef; border-radius: 5px; color: #2d4937; font-weight: 700; padding: 3px 5px; }
+.merchant-dashboard-grid { display: grid; gap: 16px; grid-template-columns: 0.8fr 1.2fr; }
+.merchant-earning-list { display: grid; gap: 9px; margin-top: 15px; }
+.merchant-earning-list > div { align-items: center; background: #f7f9f7; border-radius: 9px; display: flex; justify-content: space-between; padding: 11px 12px; }
+.merchant-order-list { display: grid; }
+.merchant-order-list > div { align-items: center; border-top: 1px solid #e8ece9; display: flex; justify-content: space-between; padding: 11px 2px; }
+.merchant-order-list > div:first-child { border-top: 0; }
+.merchant-order-list span { display: grid; gap: 4px; }
+.merchant-order-list span:last-child { justify-items: end; }
+.merchant-order-list small { color: #7c867e; font-size: 0.7rem; }
+.merchant-order-list em { font-style: normal; }
+.merchant-dashboard-link-list { display: grid; gap: 12px; }
+.merchant-dashboard-link-list article { background: #f9faf9; border: 1px solid #e3e7e4; border-radius: 12px; overflow: hidden; }
+.merchant-dashboard-link-head { align-items: center; display: flex; justify-content: space-between; padding: 14px 16px; }
+.merchant-dashboard-link-head > div { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.merchant-dashboard-link-head > span { color: #747f77; font-size: 0.72rem; }
+.merchant-dashboard-link-head b { color: #27332a; font-size: 0.95rem; }
+.merchant-dashboard-link-body { align-items: center; border-top: 1px solid #e7eae8; display: grid; gap: 13px; grid-template-columns: auto minmax(240px, 1fr) auto; padding: 13px 16px; }
+.merchant-dashboard-link-body p { color: #78827a; font-size: 0.72rem; margin: 0; }
+.merchant-dashboard-link-body code { background: #eaf1ec; border-radius: 5px; color: #255b3b; font-weight: 700; padding: 3px 5px; }
+.merchant-dashboard-link-body a { color: #236d46; font-size: 0.74rem; overflow-wrap: anywhere; }
+
+@media (max-width: 850px) {
+  .merchant-affiliate-selector { align-items: stretch; flex-direction: column; gap: 18px; }
+  .merchant-selector-form { margin-left: 0; }
+  .merchant-dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .merchant-selector-form { align-items: stretch; flex-direction: column; }
+  .merchant-selector-form label { min-width: 0; }
+  .merchant-order-list > div { align-items: flex-start; flex-direction: column; gap: 9px; }
+  .merchant-order-list span:last-child { justify-items: start; }
+  .merchant-dashboard-link-body { grid-template-columns: 1fr; }
+  .merchant-dashboard-link-body .merchant-button { justify-self: start; }
+}
+
+/* Embedded merchant home */
+.merchant-dashboard { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
+.merchant-hero { align-items: center; background: linear-gradient(130deg, #f1f8f3, #f8faf8); border: 1px solid #dfe8e1; border-radius: 16px; display: flex; justify-content: space-between; padding: 26px; }
+.merchant-hero h2 { font-size: 1.55rem; letter-spacing: -0.025em; margin: 0 0 8px; }
+.merchant-hero p:not(.merchant-eyebrow) { color: #647067; margin: 0; }
+.merchant-eyebrow { color: #16804d; font-size: 0.7rem; font-weight: 750; letter-spacing: 0.1em; margin: 0 0 7px; text-transform: uppercase; }
+.merchant-kpi-grid { display: grid; gap: 12px; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.merchant-kpi { background: #fff; border: 1px solid #e1e5e2; border-radius: 14px; display: grid; gap: 6px; min-width: 0; padding: 18px; }
+.merchant-kpi span { color: #667169; font-size: 0.76rem; font-weight: 650; }
+.merchant-kpi strong { font-size: 1.75rem; letter-spacing: -0.04em; }
+.merchant-kpi small { color: #8a938c; line-height: 1.35; }
+.merchant-kpi--attention { background: #fffbef; border-color: #eee1b4; }
+.merchant-content-grid { display: grid; gap: 16px; grid-template-columns: 1.2fr 0.8fr; }
+.merchant-card { background: #fff; border: 1px solid #e1e5e2; border-radius: 16px; padding: 22px; }
+.merchant-card-heading { align-items: center; display: flex; justify-content: space-between; margin-bottom: 16px; }
+.merchant-card-heading h3 { font-size: 1.05rem; margin: 0; }
+.merchant-action-list { display: grid; }
+.merchant-action-list a { align-items: center; border-top: 1px solid #edf0ee; color: inherit; display: flex; justify-content: space-between; padding: 14px 2px; text-decoration: none; }
+.merchant-action-list a:first-child { border-top: 0; }
+.merchant-action-list a:hover strong { color: #127044; }
+.merchant-action-list span { display: grid; gap: 3px; }
+.merchant-action-list small, .merchant-caption { color: #79837b; line-height: 1.45; }
+.merchant-action-list b { color: #16804d; font-size: 1.15rem; }
+.merchant-status { border-radius: 999px; font-size: 0.7rem; font-weight: 700; padding: 5px 9px; }
+.merchant-status--ready { background: #e7f5eb; color: #17663e; }
+.merchant-status--pending { background: #fff3cf; color: #795900; }
+.merchant-catalog-stats { display: grid; gap: 9px; }
+.merchant-catalog-stats p { align-items: center; background: #f7f9f7; border-radius: 9px; display: flex; justify-content: space-between; margin: 0; padding: 11px 12px; }
+.merchant-catalog-stats span { color: #647067; font-size: 0.83rem; }
+.merchant-caption { font-size: 0.78rem; margin: 14px 0 0; }
+
+@media (max-width: 900px) {
+  .merchant-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .merchant-content-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .merchant-hero { align-items: stretch; flex-direction: column; gap: 18px; }
+  .merchant-kpi-grid { grid-template-columns: 1fr; }
+}
+
+/* Embedded affiliate management */
+.merchant-affiliates { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
+.merchant-kpi-grid--compact { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.merchant-form { display: grid; gap: 18px; }
+.merchant-form-grid { display: grid; gap: 14px; }
+.merchant-form-grid--five { grid-template-columns: 1.2fr 1.5fr 1fr 0.65fr 1fr; }
+.merchant-form label, .merchant-status-form label { color: #4f5a52; display: grid; font-size: 0.76rem; font-weight: 650; gap: 6px; }
+.merchant-form input, .merchant-form select, .merchant-status-form select { background: #fff; border: 1px solid #cdd5cf; border-radius: 9px; color: #202520; font: inherit; min-height: 41px; outline: none; padding: 0 11px; }
+.merchant-form input:focus, .merchant-form select:focus, .merchant-status-form select:focus { border-color: #16804d; box-shadow: 0 0 0 3px rgba(22, 128, 77, 0.12); }
+.merchant-button { border: 0; border-radius: 9px; cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 700; min-height: 38px; padding: 0 13px; }
+.merchant-button:disabled { cursor: not-allowed; opacity: 0.5; }
+.merchant-button--primary { background: #16794b; color: #fff; justify-self: start; }
+.merchant-button--primary:hover { background: #0f613b; }
+.merchant-button--secondary { background: #fff; border: 1px solid #d5dcd7; color: #263129; }
+.merchant-button--secondary:hover { background: #f6f8f6; }
+.merchant-private-link { background: #edf8f0; border: 1px solid #d0ead8; border-radius: 13px; display: grid; gap: 10px; padding: 16px; }
+.merchant-private-link p { color: #607067; font-size: 0.8rem; margin: 4px 0 0; }
+.merchant-private-link a { color: #10673d; font-size: 0.78rem; overflow-wrap: anywhere; }
+.merchant-private-link .merchant-button { justify-self: start; }
+.merchant-count { align-items: center; background: #eef2ef; border-radius: 999px; display: inline-flex; font-size: 0.75rem; font-weight: 700; height: 28px; justify-content: center; min-width: 28px; padding: 0 9px; }
+.merchant-affiliate-list { display: grid; gap: 12px; }
+.merchant-affiliate-card {
+    align-items: center;
+    background: #f9faf9;
+    border: 1px solid #e4e8e5;
+    border-radius: 13px;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(210px, 1.3fr) minmax(150px, 0.8fr) minmax(290px, 2.5fr);
+    padding: 16px;
+}
+.merchant-affiliate-identity { align-items: center; display: flex; gap: 12px; min-width: 0; }
+.merchant-avatar { align-items: center; background: #e2f1e7; border-radius: 10px; color: #12643c; display: flex; flex: 0 0 auto; font-size: 0.75rem; font-weight: 750; height: 40px; justify-content: center; width: 40px; }
+.merchant-affiliate-name { align-items: center; display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; }
+.merchant-affiliate-identity a, .merchant-text-link { color: #397255; font-size: 0.76rem; overflow-wrap: anywhere; text-underline-offset: 2px; }
+.merchant-affiliate-meta { color: #707b73; display: flex; flex-wrap: wrap; font-size: 0.75rem; gap: 14px; }
+.merchant-affiliate-meta span { display: grid; gap: 4px; }
+.merchant-affiliate-meta code { background: #edf1ee; border-radius: 5px; color: #263129; font-weight: 700; padding: 3px 5px; }
+.merchant-affiliate-actions { align-items: center; display: flex; gap: 7px; justify-content: flex-end; }
+.merchant-status-form { align-items: end; border-top: 1px solid #e6eae7; display: flex; gap: 8px; grid-column: 1 / -1; justify-content: flex-end; padding-top: 12px; }
+.merchant-status-form label { min-width: 170px; }
+.merchant-status--active, .merchant-status--approved { background: #e7f5eb; color: #17663e; }
+.merchant-status--suspended, .merchant-status--rejected { background: #fee9e7; color: #9d261f; }
+.merchant-status--pending { background: #fff3cf; color: #795900; }
+.merchant-empty { border: 1px dashed #d4dbd6; border-radius: 12px; color: #758077; padding: 30px; text-align: center; }
+
+@media (max-width: 1050px) {
+  .merchant-form-grid--five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .merchant-affiliate-card { grid-template-columns: 1fr 1fr; }
+  .merchant-affiliate-actions { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+@media (max-width: 700px) {
+  .merchant-kpi-grid--compact, .merchant-form-grid--five { grid-template-columns: 1fr; }
+  .merchant-affiliate-card { grid-template-columns: 1fr; }
+  .merchant-affiliate-actions, .merchant-status-form { align-items: stretch; flex-direction: column; }
+  .merchant-status-form { grid-column: auto; }
+  .merchant-status-form label { min-width: 0; }
+}
+
+/* Embedded campaign management */
+.merchant-campaigns { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
+.merchant-campaign-form-grid { grid-template-columns: 1.35fr 1.25fr 1fr 0.8fr; }
+.merchant-form label span em { color: #8a938c; font-size: 0.65rem; font-style: normal; font-weight: 500; margin-left: 4px; text-transform: uppercase; }
+.merchant-campaign-list { display: grid; gap: 14px; }
+.merchant-campaign-card { background: #f9faf9; border: 1px solid #e2e7e3; border-radius: 14px; overflow: hidden; }
+.merchant-campaign-header { align-items: center; display: flex; justify-content: space-between; padding: 18px; }
+.merchant-campaign-name { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.merchant-campaign-name h4 { font-size: 1rem; margin: 0; }
+.merchant-campaign-header p { color: #758078; font-size: 0.78rem; margin: 6px 0 0; }
+.merchant-campaign-metrics { display: flex; gap: 20px; }
+.merchant-campaign-metrics span { color: #758078; display: grid; font-size: 0.7rem; gap: 3px; text-align: right; }
+.merchant-campaign-metrics strong { color: #263129; font-size: 1.05rem; }
+.merchant-campaign-links { border-top: 1px solid #e5e9e6; display: grid; }
+.merchant-tracking-link { align-items: center; display: grid; gap: 14px; grid-template-columns: minmax(140px, 0.7fr) minmax(260px, 2fr) auto; padding: 14px 18px; }
+.merchant-tracking-link + .merchant-tracking-link { border-top: 1px solid #e9ecea; }
+.merchant-tracking-link > div { display: grid; font-size: 0.76rem; gap: 4px; }
+.merchant-tracking-link > div span { color: #78827a; }
+.merchant-tracking-link code { background: #eaf1ec; border-radius: 5px; color: #255b3b; font-weight: 700; padding: 3px 5px; }
+.merchant-tracking-link a { color: #236d46; font-size: 0.75rem; overflow-wrap: anywhere; text-underline-offset: 2px; }
+.merchant-theme-callout { align-items: center; background: linear-gradient(125deg, #edf8f0, #f8faf8); border: 1px solid #d8e9dd; border-radius: 16px; display: flex; justify-content: space-between; padding: 22px; }
+.merchant-theme-callout h3 { font-size: 1rem; margin: 0 0 6px; }
+.merchant-theme-callout p:not(.merchant-eyebrow) { color: #68746b; font-size: 0.82rem; margin: 0; }
+.merchant-theme-callout .merchant-button { align-items: center; display: inline-flex; flex: 0 0 auto; margin-left: 24px; text-decoration: none; }
+
+@media (max-width: 950px) {
+  .merchant-campaign-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .merchant-tracking-link { grid-template-columns: 1fr auto; }
+  .merchant-tracking-link a { grid-column: 1 / -1; grid-row: 2; }
+}
+
+@media (max-width: 650px) {
+  .merchant-campaign-form-grid { grid-template-columns: 1fr; }
+  .merchant-campaign-header, .merchant-theme-callout { align-items: stretch; flex-direction: column; gap: 16px; }
+  .merchant-campaign-metrics { justify-content: flex-start; }
+  .merchant-campaign-metrics span { text-align: left; }
+  .merchant-tracking-link { grid-template-columns: 1fr; }
+  .merchant-tracking-link a { grid-column: auto; grid-row: auto; }
+  .merchant-tracking-link .merchant-button { justify-self: start; }
+  .merchant-theme-callout .merchant-button { justify-content: center; margin-left: 0; }
+}
+
+/* Embedded commissions and payouts */
+.merchant-commissions { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
+.merchant-commission-notice { align-items: flex-start; background: #f3f7f4; border: 1px solid #dee7e0; border-radius: 13px; display: flex; gap: 12px; padding: 15px 17px; }
+.merchant-notice-icon { align-items: center; background: #dcece2; border-radius: 50%; color: #17633c; display: flex; flex: 0 0 auto; font-size: 0.75rem; font-weight: 800; height: 24px; justify-content: center; width: 24px; }
+.merchant-commission-notice strong { font-size: 0.82rem; }
+.merchant-commission-notice p { color: #68736b; font-size: 0.77rem; line-height: 1.5; margin: 4px 0 0; }
+.merchant-commission-list { display: grid; gap: 12px; }
+.merchant-commission-card { background: #f9faf9; border: 1px solid #e2e7e3; border-radius: 13px; overflow: hidden; padding: 17px; }
+.merchant-commission-head { align-items: flex-start; display: flex; justify-content: space-between; }
+.merchant-commission-title { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.merchant-commission-head p { color: #78827a; font-size: 0.76rem; margin: 5px 0 0; }
+.merchant-commission-amount { display: grid; gap: 3px; text-align: right; }
+.merchant-commission-amount span { color: #78827a; font-size: 0.7rem; }
+.merchant-commission-amount strong { font-size: 1.05rem; }
+.merchant-commission-detail { background: #f1f4f2; border-radius: 9px; display: flex; flex-wrap: wrap; gap: 22px; margin-top: 14px; padding: 10px 12px; }
+.merchant-commission-detail span { color: #707a72; font-size: 0.73rem; }
+.merchant-commission-detail strong { color: #303a32; margin-left: 4px; }
+.merchant-refund-warning { background: #fff7e3; border: 1px solid #f0dfae; border-radius: 9px; color: #725500; display: grid; font-size: 0.75rem; gap: 3px; margin-top: 12px; padding: 11px 12px; }
+.merchant-refund-warning span { line-height: 1.4; }
+.merchant-commission-action { margin-top: 14px; }
+.merchant-payment-form { align-items: end; display: grid; gap: 10px; grid-template-columns: 1fr 1.4fr auto; }
+.merchant-payment-form label { color: #566158; display: grid; font-size: 0.72rem; font-weight: 650; gap: 5px; }
+.merchant-payment-form input { background: #fff; border: 1px solid #cdd5cf; border-radius: 8px; font: inherit; min-height: 39px; outline: none; padding: 0 10px; }
+.merchant-payment-form input:focus { border-color: #16804d; box-shadow: 0 0 0 3px rgba(22, 128, 77, 0.12); }
+.merchant-status--paid { background: #e5f3ed; color: #11603a; }
+.merchant-status--reversed, .merchant-status--refunded { background: #fee9e7; color: #9d261f; }
+.merchant-payout-list { display: grid; }
+.merchant-payout-row { align-items: center; border-top: 1px solid #e8ebe9; display: flex; justify-content: space-between; padding: 13px 2px; }
+.merchant-payout-row:first-child { border-top: 0; }
+.merchant-payout-row > div { display: grid; gap: 4px; }
+.merchant-payout-row > div:last-child { text-align: right; }
+.merchant-payout-row span { color: #758078; font-size: 0.75rem; }
+.merchant-payout-row code { background: #f0f3f1; border-radius: 5px; color: #566158; font-size: 0.72rem; padding: 3px 6px; }
+
+@media (max-width: 720px) {
+  .merchant-commission-head { gap: 12px; }
+  .merchant-payment-form { grid-template-columns: 1fr; }
+  .merchant-payment-form .merchant-button { justify-self: start; }
+  .merchant-payout-row { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .merchant-payout-row > div:last-child { text-align: left; }
+}

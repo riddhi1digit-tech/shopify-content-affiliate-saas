@@ -1,0 +1,33 @@
+.cah-coupon-banner {
+  align-items: center;
+  background: var(--cah-background);
+  border-radius: 8px;
+  color: var(--cah-text);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 12px 0;
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.cah-coupon-banner--hidden {
+  display: none;
+}
+
+.cah-coupon-banner strong {
+  border: 1px dashed currentColor;
+  border-radius: 4px;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+}
+
+.cah-coupon-banner button {
+  cursor: pointer;
+}
+
+.cah-coupon-banner [data-cah-tracking-status] {
+  font-size: 0.875em;
+  opacity: 0.85;
+}

@@ -1,0 +1,46 @@
+<div
+  class="cah-coupon-banner{% if block.settings.coupon_code == blank %} cah-coupon-banner--hidden{% endif %}"
+  data-cah-coupon-banner
+  data-default-code="{{ block.settings.coupon_code | escape }}"
+  style="--cah-background: {{ block.settings.background }}; --cah-text: {{ block.settings.text_color }};"
+>
+  <span data-cah-offer-message>{{ block.settings.message }}</span>
+  <strong data-cah-coupon-code>{{ block.settings.coupon_code | escape }}</strong>
+  <button type="button" data-cah-copy>Copy code</button>
+  <small data-cah-tracking-status role="status" aria-live="polite" hidden></small>
+</div>
+
+{% schema %}
+{
+  "name": "Coupon banner",
+  "target": "section",
+  "stylesheet": "coupon-banner.css",
+  "javascript": "coupon-banner.js",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "default": "Special offer: use code"
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Default coupon code",
+      "info": "Affiliate link coupon codes override this value."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#e3f1df"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#1a1a1a"
+    }
+  ]
+}
+{% endschema %}

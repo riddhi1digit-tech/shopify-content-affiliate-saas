@@ -1,0 +1,453 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  CONTENT_MANAGER
+  CONTENT_APPROVER
+  AFFILIATE_MANAGER
+  VIEWER
+}
+
+enum StoreStatus {
+  ACTIVE
+  DISCONNECTED
+  UNINSTALLED
+  ERROR
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  CHANGES_REQUESTED
+  APPROVED
+  PUBLISHING
+  PUBLISHED
+  FAILED
+  ARCHIVED
+}
+
+enum ContentType {
+  PRODUCT_DESCRIPTION
+  COLLECTION_DESCRIPTION
+  PRODUCT_METAFIELD
+  COLLECTION_METAFIELD
+}
+
+enum AffiliateStatus {
+  PENDING
+  APPROVED
+  ACTIVE
+  SUSPENDED
+  REJECTED
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum ConversionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  PAID
+}
+
+enum CommissionType {
+  PERCENTAGE
+  FIXED
+}
+
+enum CommissionStatus {
+  PENDING
+  APPROVED
+  REVERSED
+  PAID
+}
+
+enum PayoutStatus {
+  PENDING
+  APPROVED
+  PROCESSING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model Organization {
+  id                String           @id @default(cuid())
+  name              String
+  slug              String           @unique
+  defaultCommission Decimal          @default(10)
+  attributionDays   Int              @default(30)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  memberships       Membership[]
+  stores            Store[]
+  contents          Content[]
+  affiliates        Affiliate[]
+  campaigns         Campaign[]
+  clicks            AffiliateClick[]
+  conversions       Conversion[]
+  commissions       Commission[]
+  payouts           Payout[]
+  auditLogs         AuditLog[]
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  memberships Membership[]
+}
+
+model Membership {
+  id             String         @id @default(cuid())
+  organizationId String
+  userId         String
+  role           MembershipRole @default(VIEWER)
+  createdAt      DateTime       @default(now())
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+}
+
+model Store {
+  id             String       @id @default(cuid())
+  organizationId String
+  shopDomain     String       @unique
+  shopifyStoreId String?
+  name           String?
+  currencyCode   String       @default("USD")
+  timezone       String       @default("UTC")
+  status         StoreStatus  @default(ACTIVE)
+  installedAt    DateTime     @default(now())
+  uninstalledAt  DateTime?
+  lastSyncAt     DateTime?
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  products       Product[]
+  collections    Collection[]
+  contents       Content[]
+  conversions    Conversion[]
+
+  @@index([organizationId])
+}
+
+model Product {
+  id             String          @id @default(cuid())
+  organizationId String
+  storeId        String
+  shopifyId      String
+  title          String
+  handle         String?
+  status         String?
+  vendor         String?
+  productType    String?
+  descriptionHtml String?
+  syncedAt       DateTime        @default(now())
+  store          Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  contentTargets ContentTarget[]
+
+  @@unique([storeId, shopifyId])
+  @@index([organizationId, storeId])
+}
+
+model Collection {
+  id             String          @id @default(cuid())
+  organizationId String
+  storeId        String
+  shopifyId      String
+  title          String
+  handle         String?
+  syncedAt       DateTime        @default(now())
+  store          Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  contentTargets ContentTarget[]
+
+  @@unique([storeId, shopifyId])
+  @@index([organizationId, storeId])
+}
+
+model Content {
+  id             String           @id @default(cuid())
+  organizationId String
+  storeId        String
+  type           ContentType
+  title          String
+  body           String
+  status         ContentStatus    @default(DRAFT)
+  createdById    String?
+  approvedById   String?
+  publishedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  store          Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  versions       ContentVersion[]
+  targets        ContentTarget[]
+
+  @@index([organizationId, status])
+  @@index([storeId])
+}
+
+model ContentVersion {
+  id          String   @id @default(cuid())
+  contentId   String
+  version     Int
+  title       String
+  body        String
+  changeNote  String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  content     Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@unique([contentId, version])
+}
+
+model ContentTarget {
+  id           String      @id @default(cuid())
+  contentId    String
+  productId    String?
+  collectionId String?
+  namespace    String?
+  key          String?
+  content      Content     @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  product      Product?    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+}
+
+model Affiliate {
+  id             String           @id @default(cuid())
+  organizationId String
+  email          String
+  name           String
+  code           String
+  status         AffiliateStatus  @default(PENDING)
+  countryCode    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaignLinks  AffiliateLink[]
+  clicks         AffiliateClick[]
+  conversions    Conversion[]
+  commissions    Commission[]
+  payouts        Payout[]
+
+  @@unique([organizationId, email])
+  @@unique([organizationId, code])
+  @@index([organizationId, status])
+}
+
+model Campaign {
+  id              String           @id @default(cuid())
+  organizationId  String
+  name            String
+  status          CampaignStatus   @default(DRAFT)
+  commissionType  CommissionType   @default(PERCENTAGE)
+  commissionValue Decimal          @default(10)
+  startsAt        DateTime?
+  endsAt          DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  affiliateLinks  AffiliateLink[]
+  clicks          AffiliateClick[]
+  conversions     Conversion[]
+
+  @@index([organizationId, status])
+}
+
+model AffiliateLink {
+  id          String           @id @default(cuid())
+  affiliateId String
+  campaignId  String
+  code        String           @unique
+  targetUrl   String
+  couponCode  String?
+  createdAt   DateTime         @default(now())
+  affiliate   Affiliate        @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  campaign    Campaign         @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  clicks      AffiliateClick[]
+
+  @@unique([affiliateId, campaignId, targetUrl])
+  @@index([campaignId])
+}
+
+model AffiliateClick {
+  id              String        @id @default(cuid())
+  organizationId  String
+  affiliateId     String
+  campaignId      String
+  affiliateLinkId String
+  sessionKey      String?
+  referrerUrl     String?
+  landingUrl      String
+  countryCode     String?
+  userAgent       String?
+  clickedAt       DateTime      @default(now())
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  affiliate       Affiliate     @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  campaign        Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  affiliateLink   AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
+  conversions     Conversion[]
+
+  @@index([organizationId, clickedAt])
+  @@index([sessionKey])
+}
+
+model Conversion {
+  id             String           @id @default(cuid())
+  organizationId String
+  storeId        String
+  affiliateId    String
+  campaignId     String?
+  clickId        String?
+  shopifyOrderId String
+  orderNumber    String?
+  currencyCode   String
+  orderAmount    Decimal
+  eligibleAmount Decimal
+  status         ConversionStatus @default(PENDING)
+  attributedAt   DateTime         @default(now())
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  store          Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  affiliate      Affiliate        @relation(fields: [affiliateId], references: [id], onDelete: Restrict)
+  campaign       Campaign?        @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  click          AffiliateClick?  @relation(fields: [clickId], references: [id], onDelete: SetNull)
+  commissions    Commission[]
+
+  @@unique([storeId, shopifyOrderId])
+  @@index([organizationId, status])
+  @@index([affiliateId, attributedAt])
+}
+
+model Commission {
+  id             String           @id @default(cuid())
+  organizationId String
+  affiliateId    String
+  conversionId   String
+  type           CommissionType
+  rate           Decimal
+  amount         Decimal
+  currencyCode   String
+  status         CommissionStatus @default(PENDING)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  affiliate      Affiliate        @relation(fields: [affiliateId], references: [id], onDelete: Restrict)
+  conversion     Conversion       @relation(fields: [conversionId], references: [id], onDelete: Restrict)
+  payoutItems    PayoutItem[]
+
+  @@index([organizationId, status])
+  @@index([affiliateId, status])
+}
+
+model Payout {
+  id               String       @id @default(cuid())
+  organizationId   String
+  affiliateId      String
+  status           PayoutStatus @default(PENDING)
+  currencyCode     String
+  amount           Decimal
+  paymentMethod    String?
+  paymentReference String?
+  paidAt           DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  affiliate        Affiliate    @relation(fields: [affiliateId], references: [id], onDelete: Restrict)
+  items            PayoutItem[]
+
+  @@index([organizationId, status])
+  @@index([affiliateId, status])
+}
+
+model PayoutItem {
+  id           String     @id @default(cuid())
+  payoutId     String
+  commissionId String
+  amount       Decimal
+  payout       Payout     @relation(fields: [payoutId], references: [id], onDelete: Cascade)
+  commission   Commission @relation(fields: [commissionId], references: [id], onDelete: Restrict)
+
+  @@unique([commissionId])
+  @@index([payoutId])
+}
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  actorUserId    String?
+  action         String
+  entityType     String
+  entityId       String?
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([entityType, entityId])
+}
+
+// Opaque hashed login/session credentials. Raw SQL lets local dev initialize
+// this table without regenerating a client while Shopify dev is running.
+model AffiliateAccess {
+  digest         String @id
+  affiliateId    String
+  organizationId String
+  storeId        String
+  kind           String
+  expiresAt      BigInt
+
+  @@index([affiliateId])
+}
+
+model AffiliateLoginLimit {
+  id          String @id
+  windowStart BigInt
+  count       Int
+}
