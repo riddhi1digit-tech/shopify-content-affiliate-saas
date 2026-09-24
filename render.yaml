@@ -2,6 +2,7 @@ services:
   - type: web
     name: content-affiliate-hub
     runtime: docker
+    plan: free
     healthCheckPath: /affiliate-login
     autoDeployTrigger: commit
     envVars:
