@@ -138,9 +138,12 @@ export default function CommissionsPage() {
         <div className="merchant-commission-list">
         {commissions.map((item) => {
           const refunded = ["REJECTED", "REFUNDED", "PARTIALLY_REFUNDED"].includes(item.orderStatus);
+          const orderOutcome = item.orderStatus === "PENDING"
+            ? "ORDER ATTRIBUTED"
+            : item.orderStatus.replaceAll("_", " ");
           return <article className="merchant-commission-card" key={item.id}>
             <div className="merchant-commission-head"><div><div className="merchant-commission-title"><strong>{item.affiliateName}</strong><span className={`merchant-status merchant-status--${item.status.toLowerCase()}`}>{item.status}</span></div><p>Order #{item.orderNumber}</p></div><div className="merchant-commission-amount"><span>Commission</span><strong>{item.currency} {item.amount}</strong></div></div>
-            <div className="merchant-commission-detail"><span>Eligible subtotal <strong>{item.currency} {item.eligibleAmount}</strong></span><span>Order status <strong>{item.orderStatus.replaceAll("_", " ")}</strong></span></div>
+            <div className="merchant-commission-detail"><span>Eligible subtotal <strong>{item.currency} {item.eligibleAmount}</strong></span><span>Order outcome <strong>{orderOutcome}</strong></span></div>
             {["REJECTED", "REFUNDED", "PARTIALLY_REFUNDED"].includes(item.orderStatus) ? (
               <div className="merchant-refund-warning"><strong>{item.orderStatus === "REJECTED" ? "Order cancelled" : "Refund recorded"}</strong><span>{item.status === "PAID" ? "Commission was already paid. Review and recover any overpayment manually." : "Payment is blocked. The original amount remains visible for reference."}</span></div>
             ) : null}
