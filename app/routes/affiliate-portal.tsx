@@ -7,14 +7,15 @@ export const headers = privateHeaders;
 export async function loader({ request }: LoaderFunctionArgs) {
   const { affiliate, store } = await requireAffiliate(request);
   const scope = { affiliateId: affiliate.id, organizationId: affiliate.organizationId };
-  const [links, clicks, orders, reversedOrders, earnings] = await Promise.all([
+  const [links, clicks, conversionRows, reversedOrders, earnings] = await Promise.all([
     db.affiliateLink.findMany({ where: { affiliateId: affiliate.id, campaign: { organizationId: affiliate.organizationId } }, include: { campaign: true } }),
     db.affiliateClick.count({ where: scope }),
-    db.conversion.count({ where: { ...scope, storeId: store.id } }),
+    db.conversion.findMany({ where: { ...scope, storeId: store.id }, select: { clickId: true } }),
     db.commission.count({ where: { ...scope, status: "REVERSED", conversion: { storeId: store.id } } }),
     db.commission.groupBy({ by: ["status", "currencyCode"], where: { ...scope, conversion: { storeId: store.id } }, _sum: { amount: true } }),
   ]);
-  return { name: affiliate.name, store: store.name ?? store.shopDomain, clicks, orders, reversedOrders,
+  const convertedVisits = new Set(conversionRows.flatMap((item) => item.clickId ? [item.clickId] : [])).size;
+  return { name: affiliate.name, store: store.name ?? store.shopDomain, clicks, orders: conversionRows.length, convertedVisits, reversedOrders,
     earnings: earnings.map((item) => ({ status: item.status, currency: item.currencyCode, amount: item._sum.amount?.toFixed(2) ?? "0.00" })),
     links: links.filter((item) => new URL(item.targetUrl).hostname === store.shopDomain).map((item) => {
       const url = new URL(item.targetUrl); url.searchParams.set("ref", item.code);
@@ -29,7 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 export default function AffiliatePortal() {
   const data = useLoaderData<typeof loader>();
-  const conversionRate = data.clicks ? ((data.orders / data.clicks) * 100).toFixed(1) : "0.0";
+  const conversionRate = data.clicks ? ((data.convertedVisits / data.clicks) * 100).toFixed(1) : "0.0";
   const reversalRate = data.orders ? ((data.reversedOrders / data.orders) * 100).toFixed(1) : "0.0";
   const activeLinks = data.links.filter((item) => item.status === "ACTIVE").length;
   const activeLinkRate = data.links.length ? ((activeLinks / data.links.length) * 100).toFixed(1) : "0.0";
@@ -43,7 +44,7 @@ export default function AffiliatePortal() {
       <article className="affiliate-stat-card"><span>Tracked visits</span><strong>{data.clicks}</strong><small>Recorded campaign visits</small></article>
       <article className="affiliate-stat-card"><span>Attributed orders</span><strong>{data.orders}</strong><small>Includes refunded orders</small></article>
       <article className="affiliate-stat-card"><span>Campaign links</span><strong>{data.links.length}</strong><small>Links assigned to you</small></article>
-      <article className="affiliate-stat-card"><span>Conversion rate</span><strong>{conversionRate}%</strong><small>Orders divided by visits</small></article>
+      <article className="affiliate-stat-card"><span>Conversion rate</span><strong>{conversionRate}%</strong><small>Visits that produced an order</small></article>
       <article className="affiliate-stat-card"><span>Reversal rate</span><strong>{reversalRate}%</strong><small>Reversed commissions per order</small></article>
       <article className="affiliate-stat-card"><span>Active-link rate</span><strong>{activeLinkRate}%</strong><small>{activeLinks} of {data.links.length} links active</small></article>
     </section>

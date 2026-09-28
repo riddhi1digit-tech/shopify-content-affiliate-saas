@@ -23,21 +23,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const id = new URL(request.url).searchParams.get("affiliateId") ?? affiliates[0]?.id;
   const affiliate = affiliates.find((item) => item.id === id);
   if (id && !affiliate) throw new Response("Affiliate not found", { status: 404 });
-  if (!affiliate) return { affiliates, affiliate: null, links: [], clicks: 0, conversions: 0, earnings: [], orders: [] };
+  if (!affiliate) return { affiliates, affiliate: null, links: [], clicks: 0, conversions: 0, convertedVisits: 0, earnings: [], orders: [] };
   const scope = { organizationId: store.organizationId, affiliateId: affiliate.id };
-  const [links, clicks, conversions, earnings, orders] = await Promise.all([
+  const [links, clicks, conversionRows, earnings, orders] = await Promise.all([
     db.affiliateLink.findMany({
       where: { affiliateId: affiliate.id, campaign: { organizationId: store.organizationId } },
       include: { campaign: true, _count: { select: { clicks: true } } },
       orderBy: { createdAt: "desc" },
     }),
     db.affiliateClick.count({ where: scope }),
-    db.conversion.count({ where: scope }),
+    db.conversion.findMany({ where: scope, select: { clickId: true } }),
     db.commission.groupBy({ by: ["currencyCode", "status"], where: scope, _sum: { amount: true } }),
     db.commission.findMany({ where: scope, include: { conversion: true }, orderBy: { createdAt: "desc" }, take: 20 }),
   ]);
+  const convertedVisits = new Set(conversionRows.flatMap((item) => item.clickId ? [item.clickId] : [])).size;
   return {
-    affiliates, affiliate, clicks, conversions,
+    affiliates, affiliate, clicks, conversions: conversionRows.length, convertedVisits,
     links: links.map((link) => ({ id: link.id, name: link.campaign.name, status: link.campaign.status, url: referralUrl(link.targetUrl, link.code, link.couponCode), coupon: link.couponCode, clicks: link._count.clicks })),
     earnings: earnings.map((group) => ({ currency: group.currencyCode, status: group.status, amount: group._sum.amount?.toFixed(2) ?? "0.00" })),
     orders: orders.map((item) => ({ id: item.id, order: item.conversion.orderNumber ?? item.conversion.shopifyOrderId, currency: item.currencyCode, amount: item.amount.toFixed(2), status: item.status, refundedOrCancelled: ["REJECTED", "REFUNDED", "PARTIALLY_REFUNDED"].includes(item.conversion.status) })),
@@ -45,8 +46,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function AffiliateDashboard() {
-  const { affiliates, affiliate, links, clicks, conversions, earnings, orders } = useLoaderData<typeof loader>();
-  const conversionRate = clicks ? ((conversions / clicks) * 100).toFixed(1) : "0.0";
+  const { affiliates, affiliate, links, clicks, conversions, convertedVisits, earnings, orders } = useLoaderData<typeof loader>();
+  const conversionRate = clicks ? ((convertedVisits / clicks) * 100).toFixed(1) : "0.0";
   return <s-page heading="Affiliate dashboard">
     <div className="merchant-affiliate-dashboard">
       <section className="merchant-affiliate-selector">
@@ -63,7 +64,7 @@ export default function AffiliateDashboard() {
         <section className="merchant-kpi-grid merchant-kpi-grid--compact" aria-label="Affiliate performance summary">
           <article className="merchant-kpi"><span>Tracked visits</span><strong>{clicks}</strong><small>Recorded link visits</small></article>
           <article className="merchant-kpi"><span>Attributed orders</span><strong>{conversions}</strong><small>Includes refunded orders</small></article>
-          <article className="merchant-kpi"><span>Conversion rate</span><strong>{conversionRate}%</strong><small>Orders divided by visits</small></article>
+          <article className="merchant-kpi"><span>Conversion rate</span><strong>{conversionRate}%</strong><small>Visits that produced an order</small></article>
           <article className="merchant-kpi"><span>Campaign links</span><strong>{links.length}</strong><small>Assigned tracking links</small></article>
         </section>
 
