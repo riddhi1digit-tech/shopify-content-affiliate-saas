@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from "react-router";
 
 import db from "../db.server";
+import { logWebhook } from "../models/webhook-log.server";
 import { authenticate } from "../shopify.server";
 
 function isDuplicateOrder(error: unknown) {
@@ -28,11 +29,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     ({ name }) => name === "_cah_ref",
   )?.value;
 
-  console.info(`Received ${topic} webhook for ${shop}`);
-  if (!referralCode) return new Response();
+  logWebhook(request, "received", { topic, shop });
+  if (!referralCode) {
+    logWebhook(request, "ignored_missing_referral", { topic, shop });
+    return new Response();
+  }
 
   const store = await db.store.findUnique({ where: { shopDomain: shop } });
-  if (!store) return new Response();
+  if (!store) {
+    logWebhook(request, "ignored_unknown_store", { topic, shop });
+    return new Response();
+  }
 
   const link = await db.affiliateLink.findFirst({
     where: {
@@ -41,13 +48,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     },
     include: { campaign: true },
   });
-  if (!link) return new Response();
+  if (!link) {
+    logWebhook(request, "ignored_unknown_referral", { topic, shop });
+    return new Response();
+  }
 
   const shopifyOrderId = String(order.id);
   const alreadyProcessed = await db.conversion.findUnique({
     where: { storeId_shopifyOrderId: { storeId: store.id, shopifyOrderId } },
   });
-  if (alreadyProcessed) return new Response();
+  if (alreadyProcessed) {
+    logWebhook(request, "ignored_duplicate_order", { topic, shop, orderId: shopifyOrderId });
+    return new Response();
+  }
 
   const orderAmount = Number(order.total_price ?? 0);
   const eligibleAmount = Number(order.subtotal_price ?? order.total_price ?? 0);
@@ -60,7 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     eligibleAmount < 0 ||
     rate < 0
   ) {
-    console.error(`Rejected invalid order amounts for Shopify order ${shopifyOrderId}`);
+    logWebhook(request, "rejected_invalid_amount", { topic, shop, orderId: shopifyOrderId }, "error");
     return new Response();
   }
   const commissionAmount =
@@ -102,12 +115,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     // Shopify can deliver the same webhook concurrently. The database unique
     // constraint is the final idempotency guard; acknowledge that duplicate.
     if (isDuplicateOrder(error)) {
-      console.info(`Ignored duplicate order webhook ${shopifyOrderId} for ${shop}`);
+      logWebhook(request, "ignored_concurrent_duplicate", { topic, shop, orderId: shopifyOrderId });
       return new Response();
     }
     throw error;
   }
 
-  console.info(`Attributed order ${shopifyOrderId} to ${referralCode}`);
+  logWebhook(request, "order_attributed", { topic, shop, orderId: shopifyOrderId });
   return new Response();
 };

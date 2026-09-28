@@ -1,12 +1,16 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import { protectOrderCommission } from "../models/commission-protection.server";
+import { logWebhook } from "../models/webhook-log.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   const { payload, shop } = await authenticate.webhook(request);
   const order = payload as { id?: string | number };
   if (order.id != null) {
     await protectOrderCommission(shop, String(order.id), "cancelled");
+    logWebhook(request, "cancellation_protection_applied", { shop, orderId: String(order.id) });
+  } else {
+    logWebhook(request, "ignored_missing_order_id", { shop, topic: "ORDERS_CANCELLED" });
   }
   return new Response();
 }

@@ -23,6 +23,5 @@ export async function protectOrderCommission(
       where: { conversionId: conversion.id, status: { in: ["PENDING", "APPROVED"] } },
       data: { status: "REVERSED" },
     });
-    console.info(`Commission protection: ${reason} order ${orderId} for ${shop}`);
   });
 }
