@@ -33,7 +33,7 @@
     banners.forEach((banner) =>
       render(
         saved ? saved.coupon : banner.dataset.defaultCode,
-        saved ? "Affiliate offer active" : "",
+        saved?.coupon ? "Affiliate offer active" : "",
         banner,
       ),
     );
