@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { Form, useLoaderData } from "react-router";
+import { Form, Link, useLoaderData } from "react-router";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
@@ -55,7 +55,7 @@ export default function AffiliateDashboard() {
         {affiliates.length ? <Form method="get" className="merchant-selector-form">
           <label><span>Affiliate</span><select name="affiliateId" defaultValue={affiliate?.id} key={affiliate?.id}>{affiliates.map((item) => <option key={item.id} value={item.id}>{item.name} ({item.code})</option>)}</select></label>
           <button className="merchant-button merchant-button--primary" type="submit">View dashboard</button>
-        </Form> : <a className="merchant-button merchant-button--primary" href="/app/affiliates">Create affiliate</a>}
+        </Form> : <Link className="merchant-button merchant-button--primary" to="/app/affiliates">Create affiliate</Link>}
       </section>
 
       {affiliate ? <>

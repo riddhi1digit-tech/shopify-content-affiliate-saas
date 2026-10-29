@@ -3,6 +3,7 @@ import type { ActionFunctionArgs } from "react-router";
 import { Form, useActionData, redirect, useNavigation } from "react-router";
 import { requestAffiliateLogin } from "../models/affiliate-login-request.server";
 import { checkOrigin, privateHeaders, redeemAffiliateInvite } from "../models/affiliate-access.server";
+import { AppIcon } from "../components/AppIcon";
 
 export const headers = privateHeaders;
 export async function action({ request }: ActionFunctionArgs) {
@@ -34,7 +35,7 @@ export default function AffiliateLogin() {
   }, []);
   return <main className="affiliate-shell affiliate-auth-shell">
     <section className="affiliate-auth-card">
-      <div className="affiliate-brand-mark" aria-hidden="true">CA</div>
+      <div className="affiliate-brand-mark"><AppIcon name="sparkles" size={23} /></div>
       <p className="affiliate-eyebrow">Content Affiliate Hub</p>
       <h1>Affiliate sign-in</h1>
       <p className="affiliate-lead">Access your campaign links, tracked results, and commission history.</p>

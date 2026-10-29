@@ -2,6 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, redirect, useLoaderData } from "react-router";
 import db from "../db.server";
 import { checkOrigin, logoutAffiliate, privateHeaders, requireAffiliate } from "../models/affiliate-access.server";
+import { AppIcon } from "../components/AppIcon";
 
 export const headers = privateHeaders;
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -36,17 +37,17 @@ export default function AffiliatePortal() {
   const activeLinkRate = data.links.length ? ((activeLinks / data.links.length) * 100).toFixed(1) : "0.0";
   return <main className="affiliate-shell affiliate-portal-shell">
     <header className="affiliate-portal-header">
-      <div><p className="affiliate-eyebrow">{data.store}</p><h1>Welcome, {data.name}</h1><p className="affiliate-lead">Here’s how your affiliate activity is performing.</p></div>
+      <div><div className="affiliate-portal-brand"><AppIcon name="sparkles" size={20} /></div><p className="affiliate-eyebrow">{data.store}</p><h1>Welcome, {data.name}</h1><p className="affiliate-lead">Here’s how your affiliate activity is performing.</p></div>
       <Form method="post"><button className="affiliate-button affiliate-button--secondary" type="submit">Sign out</button></Form>
     </header>
 
     <section className="affiliate-stat-grid" aria-label="Affiliate results">
-      <article className="affiliate-stat-card"><span>Tracked visits</span><strong>{data.clicks}</strong><small>Recorded campaign visits</small></article>
-      <article className="affiliate-stat-card"><span>Attributed orders</span><strong>{data.orders}</strong><small>Includes refunded orders</small></article>
-      <article className="affiliate-stat-card"><span>Campaign links</span><strong>{data.links.length}</strong><small>Links assigned to you</small></article>
-      <article className="affiliate-stat-card"><span>Conversion rate</span><strong>{conversionRate}%</strong><small>Visits that produced an order</small></article>
-      <article className="affiliate-stat-card"><span>Reversal rate</span><strong>{reversalRate}%</strong><small>Reversed commissions per order</small></article>
-      <article className="affiliate-stat-card"><span>Active-link rate</span><strong>{activeLinkRate}%</strong><small>{activeLinks} of {data.links.length} links active</small></article>
+      <article className="affiliate-stat-card"><div className="affiliate-stat-icon"><AppIcon name="click" /></div><span>Tracked visits</span><strong>{data.clicks}</strong><small>Recorded campaign visits</small></article>
+      <article className="affiliate-stat-card"><div className="affiliate-stat-icon"><AppIcon name="order" /></div><span>Attributed orders</span><strong>{data.orders}</strong><small>Includes refunded orders</small></article>
+      <article className="affiliate-stat-card"><div className="affiliate-stat-icon"><AppIcon name="campaign" /></div><span>Campaign links</span><strong>{data.links.length}</strong><small>Links assigned to you</small></article>
+      <article className="affiliate-stat-card"><div className="affiliate-stat-icon"><AppIcon name="chart" /></div><span>Conversion rate</span><strong>{conversionRate}%</strong><small>Visits that produced an order</small></article>
+      <article className="affiliate-stat-card"><div className="affiliate-stat-icon affiliate-stat-icon--warning"><AppIcon name="commission" /></div><span>Reversal rate</span><strong>{reversalRate}%</strong><small>Reversed commissions per order</small></article>
+      <article className="affiliate-stat-card"><div className="affiliate-stat-icon"><AppIcon name="check" /></div><span>Active-link rate</span><strong>{activeLinkRate}%</strong><small>{activeLinks} of {data.links.length} links active</small></article>
     </section>
 
     <section className="affiliate-panel">

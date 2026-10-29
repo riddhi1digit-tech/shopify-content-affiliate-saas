@@ -437,3 +437,100 @@ body {
   .merchant-payout-row { align-items: flex-start; flex-direction: column; gap: 10px; }
   .merchant-payout-row > div:last-child { text-align: left; }
 }
+
+/* Unified product UI foundation */
+:root {
+  --cah-ink: #17211c;
+  --cah-muted: #66736b;
+  --cah-border: #e1e7e3;
+  --cah-surface: #fff;
+  --cah-surface-soft: #f7f9f8;
+  --cah-brand: #147a4b;
+  --cah-brand-strong: #0e6039;
+  --cah-brand-soft: #eaf6ef;
+  --cah-warning-soft: #fff8e5;
+  --cah-radius-sm: 10px;
+  --cah-radius-md: 14px;
+  --cah-radius-lg: 18px;
+  --cah-shadow-sm: 0 1px 2px rgba(20,40,29,.03), 0 6px 18px rgba(20,40,29,.035);
+  --cah-shadow-md: 0 16px 44px rgba(20,40,29,.08);
+}
+body { background: #f5f7f6; color: var(--cah-ink); font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
+button, input, select, textarea { font: inherit; }
+
+.merchant-dashboard, .merchant-content-workflow, .merchant-affiliate-dashboard,
+.merchant-affiliates, .merchant-campaigns, .merchant-commissions {
+  color: var(--cah-ink); gap: 20px; margin-inline: auto; max-width: 1240px; width: 100%;
+}
+.merchant-hero, .merchant-workflow-hero, .merchant-affiliate-selector, .merchant-theme-callout {
+  background: var(--cah-surface); border-color: var(--cah-border); box-shadow: var(--cah-shadow-sm); overflow: hidden; position: relative;
+}
+.merchant-hero::after, .merchant-workflow-hero::after, .merchant-affiliate-selector::after, .merchant-theme-callout::after {
+  background: var(--cah-brand-soft); border-radius: 999px; content: ""; height: 180px; opacity: .75; pointer-events: none; position: absolute; right: -76px; top: -96px; width: 180px;
+}
+.merchant-hero > *, .merchant-workflow-hero > *, .merchant-affiliate-selector > *, .merchant-theme-callout > * { position: relative; z-index: 1; }
+.merchant-hero-icon, .affiliate-portal-brand {
+  align-items: center; background: var(--cah-brand-soft); border: 1px solid #d7ebdf; border-radius: 12px; color: var(--cah-brand); display: inline-flex; height: 42px; justify-content: center; margin-bottom: 18px; width: 42px;
+}
+.merchant-hero h2, .merchant-affiliate-selector h2, .merchant-workflow-hero h2 { font-size: clamp(1.45rem,2.4vw,2rem); letter-spacing: -.035em; line-height: 1.15; }
+.merchant-eyebrow { color: var(--cah-brand); font-size: .68rem; letter-spacing: .13em; }
+
+.merchant-card, .merchant-content-editor, .merchant-profile-strip, .merchant-commission-card,
+.merchant-campaign-card, .merchant-affiliate-card, .merchant-rule-card, .merchant-fraud-card {
+  background: var(--cah-surface); border-color: var(--cah-border); box-shadow: var(--cah-shadow-sm);
+}
+.merchant-card { border-radius: var(--cah-radius-lg); padding: clamp(20px,2.5vw,28px); }
+.merchant-card-heading { gap: 18px; margin-bottom: 20px; }
+.merchant-card-heading h3 { font-size: 1.12rem; letter-spacing: -.022em; }
+.merchant-caption { color: var(--cah-muted); }
+
+.merchant-kpi { border-color: var(--cah-border); border-radius: var(--cah-radius-md); box-shadow: var(--cah-shadow-sm); padding: 17px; }
+.merchant-kpi:has(.merchant-kpi-icon) { grid-template-columns: auto 1fr; }
+.merchant-kpi-icon { align-items: center; align-self: start; background: var(--cah-brand-soft); border-radius: 10px; color: var(--cah-brand); display: flex; grid-row: 1 / 4; height: 38px; justify-content: center; margin-right: 4px; width: 38px; }
+.merchant-kpi:has(.merchant-kpi-icon) > span, .merchant-kpi:has(.merchant-kpi-icon) > strong, .merchant-kpi:has(.merchant-kpi-icon) > small { grid-column: 2; }
+.merchant-kpi strong { color: var(--cah-ink); font-size: 1.65rem; line-height: 1; }
+.merchant-kpi--attention { background: var(--cah-warning-soft); }
+.merchant-kpi--attention .merchant-kpi-icon { background: #ffedb8; color: #7a5900; }
+
+.merchant-form input, .merchant-form select, .merchant-status-form select, .merchant-content-form input,
+.merchant-content-form textarea, .merchant-payment-form input, .merchant-selector-form select {
+  border-color: #cfd8d2; border-radius: var(--cah-radius-sm); min-height: 44px; transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+.merchant-form input:hover, .merchant-form select:hover, .merchant-content-form input:hover, .merchant-content-form textarea:hover { border-color: #aebcb3; }
+.merchant-form input:focus, .merchant-form select:focus, .merchant-status-form select:focus,
+.merchant-content-form input:focus, .merchant-content-form textarea:focus, .merchant-payment-form input:focus,
+.merchant-selector-form select:focus { border-color: var(--cah-brand); box-shadow: 0 0 0 3px rgba(20,122,75,.13); }
+.merchant-button { border-radius: var(--cah-radius-sm); min-height: 40px; transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
+.merchant-button:not(:disabled):hover { transform: translateY(-1px); }
+.merchant-button--primary { background: var(--cah-brand); box-shadow: 0 4px 10px rgba(20,122,75,.15); }
+.merchant-button--primary:hover { background: var(--cah-brand-strong); }
+.merchant-button--secondary { border-color: var(--cah-border); }
+
+.merchant-action-list a { border-color: #edf1ee; border-radius: 10px; margin-inline: -8px; padding-inline: 10px; transition: background 140ms ease; }
+.merchant-action-list a:hover { background: var(--cah-surface-soft); }
+.merchant-affiliate-card, .merchant-campaign-card, .merchant-rule-card, .merchant-fraud-card, .merchant-commission-card { transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
+.merchant-affiliate-card:hover, .merchant-campaign-card:hover, .merchant-rule-card:hover, .merchant-fraud-card:hover, .merchant-commission-card:hover { border-color: #cbd8d0; box-shadow: 0 10px 28px rgba(20,40,29,.06); transform: translateY(-1px); }
+.merchant-empty { background: var(--cah-surface-soft); border-color: #ced8d1; padding: 40px 24px; }
+.merchant-status, .merchant-count, .affiliate-badge { letter-spacing: .025em; text-transform: uppercase; }
+
+.affiliate-shell { --affiliate-ink: var(--cah-ink); --affiliate-muted: var(--cah-muted); --affiliate-border: var(--cah-border); --affiliate-accent: var(--cah-brand); --affiliate-accent-dark: var(--cah-brand-strong); }
+.affiliate-auth-shell { background: #f4f7f5; }
+.affiliate-auth-card { border-radius: 24px; box-shadow: var(--cah-shadow-md); }
+.affiliate-brand-mark { background: var(--cah-brand); box-shadow: 0 8px 20px rgba(20,122,75,.18); }
+.affiliate-portal-shell { background: #f4f7f5; }
+.affiliate-portal-header { align-items: center; }
+.affiliate-stat-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.affiliate-stat-card, .affiliate-panel { border-color: var(--cah-border); box-shadow: var(--cah-shadow-sm); }
+.affiliate-stat-card { gap: 6px; grid-template-columns: auto 1fr; padding: 20px; }
+.affiliate-stat-icon { align-items: center; background: var(--cah-brand-soft); border-radius: 10px; color: var(--cah-brand); display: flex; grid-row: 1 / 4; height: 38px; justify-content: center; margin-right: 4px; width: 38px; }
+.affiliate-stat-icon--warning { background: #fff0d0; color: #805c00; }
+.affiliate-stat-card > span, .affiliate-stat-card > strong, .affiliate-stat-card > small { grid-column: 2; }
+.affiliate-campaign-card, .affiliate-earning-row { background: var(--cah-surface-soft); }
+
+*:focus-visible { outline: 3px solid rgba(20,122,75,.25); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+@media (max-width: 720px) {
+  .affiliate-stat-grid { grid-template-columns: 1fr; }
+  .affiliate-portal-brand { margin-bottom: 14px; }
+  .merchant-card-heading { align-items: flex-start; flex-direction: column; }
+}
