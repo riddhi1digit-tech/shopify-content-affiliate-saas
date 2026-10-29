@@ -55,6 +55,8 @@ export default function Index() {
   const catalogSync = useFetcher<typeof action>();
   const isSyncing = catalogSync.state !== "idle";
   const syncResult = catalogSync.data;
+  const conversionRate = data.clicks ? (data.conversions / data.clicks) * 100 : 0;
+  const conversionWidth = Math.min(100, Math.max(data.conversions > 0 ? 4 : 0, conversionRate));
 
   return (
     <s-page heading="Content Affiliate Hub">
@@ -98,6 +100,38 @@ export default function Index() {
             <div className="merchant-catalog-stats"><p><span>Products</span><strong>{data.products}</strong></p><p><span>Collections</span><strong>{data.collections}</strong></p><p><span>Content items</span><strong>{data.contents}</strong></p></div>
             <p className="merchant-caption">{data.lastSyncAt ? `Last synchronized ${new Date(data.lastSyncAt).toLocaleString()}` : "Run catalog sync to import your Shopify products and collections."}</p>
           </article>
+        </section>
+
+        <section className="merchant-card merchant-analytics-card" aria-labelledby="performance-heading">
+          <div className="merchant-card-heading">
+            <div className="merchant-heading-with-icon">
+              <span className="merchant-section-icon"><AppIcon name="chart" /></span>
+              <div><p className="merchant-eyebrow">Analytics</p><h3 id="performance-heading">Performance snapshot</h3></div>
+            </div>
+            <p className="merchant-caption">Live totals from tracked referrals and attributed Shopify orders.</p>
+          </div>
+
+          <div className="merchant-analytics-grid">
+            <div className="merchant-funnel-panel">
+              <div className="merchant-funnel-summary">
+                <div><span>Conversion rate</span><strong>{conversionRate.toFixed(1)}%</strong></div>
+                <div><span>Visits</span><strong>{data.clicks}</strong></div>
+                <div><span>Orders</span><strong>{data.conversions}</strong></div>
+              </div>
+              <div className="merchant-funnel" role="img" aria-label={`${data.clicks} tracked visits produced ${data.conversions} attributed orders, a ${conversionRate.toFixed(1)} percent conversion rate`}>
+                <div className="merchant-funnel-row"><span>Tracked visits</span><div><i style={{ width: data.clicks ? "100%" : "0%" }} /></div><strong>{data.clicks}</strong></div>
+                <div className="merchant-funnel-row merchant-funnel-row--conversion"><span>Attributed orders</span><div><i style={{ width: `${conversionWidth}%` }} /></div><strong>{data.conversions}</strong></div>
+              </div>
+            </div>
+
+            <aside className="merchant-insight-panel" aria-label="Program insights">
+              <div className="merchant-insight-heading"><AppIcon name="sparkles" size={18} /><strong>Recommended next step</strong></div>
+              {data.affiliates === 0 ? <><h4>Recruit your first affiliate</h4><p>Create a partner profile before launching a tracked campaign.</p><Link to="/app/affiliates">Add an affiliate <span aria-hidden="true">→</span></Link></>
+                : data.pendingCommissions > 0 ? <><h4>Review pending earnings</h4><p>{data.pendingCommissions} commission{data.pendingCommissions === 1 ? " is" : "s are"} waiting for a merchant decision.</p><Link to="/app/commissions">Review commissions <span aria-hidden="true">→</span></Link></>
+                : data.clicks > 0 && data.conversions === 0 ? <><h4>Improve campaign conversion</h4><p>Your links are receiving traffic but have not produced an attributed order yet.</p><Link to="/app/campaigns">Review campaigns <span aria-hidden="true">→</span></Link></>
+                : <><h4>Your program is active</h4><p>Tracking is working and there are no commissions waiting for review.</p><Link to="/app/affiliate-dashboard">View affiliate performance <span aria-hidden="true">→</span></Link></>}
+            </aside>
+          </div>
         </section>
       </div>
     </s-page>

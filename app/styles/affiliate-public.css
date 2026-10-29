@@ -534,3 +534,40 @@ button, input, select, textarea { font: inherit; }
   .affiliate-portal-brand { margin-bottom: 14px; }
   .merchant-card-heading { align-items: flex-start; flex-direction: column; }
 }
+
+/* Lightweight analytics — no chart runtime or client-side data dependency */
+.merchant-heading-with-icon { align-items: center; display: flex; gap: 12px; }
+.merchant-section-icon { align-items: center; background: var(--cah-brand-soft); border-radius: 10px; color: var(--cah-brand); display: inline-flex; flex: 0 0 auto; height: 38px; justify-content: center; width: 38px; }
+.merchant-heading-with-icon .merchant-eyebrow { margin-bottom: 4px; }
+.merchant-analytics-grid { display: grid; gap: 18px; grid-template-columns: minmax(0, 1.55fr) minmax(260px, .75fr); }
+.merchant-funnel-panel, .merchant-insight-panel { background: var(--cah-surface-soft); border: 1px solid var(--cah-border); border-radius: var(--cah-radius-md); padding: 20px; }
+.merchant-funnel-summary { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 24px; }
+.merchant-funnel-summary > div { border-right: 1px solid var(--cah-border); display: grid; gap: 5px; }
+.merchant-funnel-summary > div:last-child { border-right: 0; }
+.merchant-funnel-summary span { color: var(--cah-muted); font-size: .72rem; font-weight: 650; }
+.merchant-funnel-summary strong { font-size: 1.45rem; letter-spacing: -.04em; }
+.merchant-funnel { display: grid; gap: 15px; }
+.merchant-funnel-row { align-items: center; display: grid; gap: 12px; grid-template-columns: 108px minmax(80px, 1fr) 42px; }
+.merchant-funnel-row > span { color: var(--cah-muted); font-size: .74rem; }
+.merchant-funnel-row > div { background: #e5ebe7; border-radius: 999px; height: 10px; overflow: hidden; }
+.merchant-funnel-row i { background: var(--cah-brand); border-radius: inherit; display: block; height: 100%; min-width: 0; transition: width 300ms ease; }
+.merchant-funnel-row--conversion i { background: #50a979; }
+.merchant-funnel-row > strong { font-size: .78rem; text-align: right; }
+.merchant-insight-panel { align-content: start; background: #f0f8f3; border-color: #d7eadf; display: grid; }
+.merchant-insight-heading { align-items: center; color: var(--cah-brand); display: flex; font-size: .74rem; gap: 7px; margin-bottom: 20px; text-transform: uppercase; }
+.merchant-insight-panel h4 { font-size: 1.05rem; letter-spacing: -.02em; margin: 0 0 8px; }
+.merchant-insight-panel p { color: var(--cah-muted); font-size: .79rem; line-height: 1.55; margin: 0 0 18px; }
+.merchant-insight-panel a { color: var(--cah-brand-strong); font-size: .78rem; font-weight: 750; text-decoration: none; }
+.merchant-insight-panel a span { margin-left: 4px; }
+.merchant-insight-panel a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 820px) {
+  .merchant-analytics-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .merchant-funnel-summary { grid-template-columns: 1fr; }
+  .merchant-funnel-summary > div { border-bottom: 1px solid var(--cah-border); border-right: 0; padding-bottom: 10px; }
+  .merchant-funnel-summary > div:last-child { border-bottom: 0; }
+  .merchant-funnel-row { grid-template-columns: 1fr auto; }
+  .merchant-funnel-row > div { grid-column: 1 / -1; grid-row: 2; }
+}
