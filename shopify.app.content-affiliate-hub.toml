@@ -1,0 +1,50 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "7cdd065182b56398018dde777edfaa9f"
+application_url = "https://content-affiliate-hub-prachha.onrender.com"
+embedded = true
+name = "Content Affiliate Hub"
+
+[build]
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2026-10"
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/scopes_update"
+  topics = [ "app/scopes_update" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = [ "app/uninstalled" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/orders/cancelled"
+  topics = [ "orders/cancelled" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/orders/create"
+  topics = [ "orders/create" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/refunds/create"
+  topics = [ "refunds/create" ]
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_orders,read_products,write_app_proxy,write_discounts,write_products"
+optional_scopes = [ ]
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = [
+  "https://content-affiliate-hub-prachha.onrender.com/auth/callback",
+  "https://content-affiliate-hub-prachha.onrender.com/auth/shopify/callback",
+  "https://content-affiliate-hub-prachha.onrender.com/api/auth/callback"
+]
+
+[app_proxy]
+url = "/api/affiliate"
+subpath = "content-affiliate-hub"
+prefix = "apps"

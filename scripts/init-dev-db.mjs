@@ -239,6 +239,70 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS "Commission_organizationId_status_idx" ON "Commission"("organizationId", "status");
   CREATE INDEX IF NOT EXISTS "Commission_affiliateId_status_idx" ON "Commission"("affiliateId", "status");
 
+  CREATE TABLE IF NOT EXISTS "CommissionRule" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "organizationId" TEXT NOT NULL,
+    "campaignId" TEXT,
+    "affiliateId" TEXT,
+    "productId" TEXT,
+    "name" TEXT NOT NULL,
+    "scope" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "value" DECIMAL NOT NULL,
+    "priority" INTEGER NOT NULL DEFAULT 100,
+    "active" INTEGER NOT NULL DEFAULT 1,
+    "startsAt" DATETIME,
+    "endsAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "CommissionRule_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE CASCADE,
+    CONSTRAINT "CommissionRule_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "Campaign"("id") ON DELETE CASCADE,
+    CONSTRAINT "CommissionRule_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "Affiliate"("id") ON DELETE CASCADE,
+    CONSTRAINT "CommissionRule_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE
+  );
+  CREATE INDEX IF NOT EXISTS "CommissionRule_organizationId_active_priority_idx" ON "CommissionRule"("organizationId", "active", "priority");
+  CREATE INDEX IF NOT EXISTS "CommissionRule_campaignId_active_priority_idx" ON "CommissionRule"("campaignId", "active", "priority");
+  CREATE INDEX IF NOT EXISTS "CommissionRule_affiliateId_active_priority_idx" ON "CommissionRule"("affiliateId", "active", "priority");
+  CREATE INDEX IF NOT EXISTS "CommissionRule_productId_active_priority_idx" ON "CommissionRule"("productId", "active", "priority");
+
+  CREATE TABLE IF NOT EXISTS "FraudEvent" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "organizationId" TEXT NOT NULL,
+    "affiliateId" TEXT,
+    "clickId" TEXT,
+    "conversionId" TEXT,
+    "type" TEXT NOT NULL,
+    "severity" TEXT NOT NULL,
+    "score" INTEGER NOT NULL,
+    "reason" TEXT NOT NULL,
+    "evidence" JSON,
+    "status" TEXT NOT NULL DEFAULT 'OPEN',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "resolvedAt" DATETIME,
+    CONSTRAINT "FraudEvent_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE CASCADE,
+    CONSTRAINT "FraudEvent_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "Affiliate"("id") ON DELETE SET NULL,
+    CONSTRAINT "FraudEvent_clickId_fkey" FOREIGN KEY ("clickId") REFERENCES "AffiliateClick"("id") ON DELETE SET NULL,
+    CONSTRAINT "FraudEvent_conversionId_fkey" FOREIGN KEY ("conversionId") REFERENCES "Conversion"("id") ON DELETE CASCADE
+  );
+  CREATE INDEX IF NOT EXISTS "FraudEvent_organizationId_status_createdAt_idx" ON "FraudEvent"("organizationId", "status", "createdAt");
+  CREATE INDEX IF NOT EXISTS "FraudEvent_affiliateId_createdAt_idx" ON "FraudEvent"("affiliateId", "createdAt");
+  CREATE INDEX IF NOT EXISTS "FraudEvent_conversionId_idx" ON "FraudEvent"("conversionId");
+
+  CREATE TABLE IF NOT EXISTS "BlocklistEntry" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "organizationId" TEXT NOT NULL,
+    "kind" TEXT NOT NULL,
+    "targetValue" TEXT NOT NULL,
+    "label" TEXT,
+    "active" INTEGER NOT NULL DEFAULT 1,
+    "expiresAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "BlocklistEntry_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE CASCADE
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS "BlocklistEntry_organizationId_kind_targetValue_key" ON "BlocklistEntry"("organizationId", "kind", "targetValue");
+  CREATE INDEX IF NOT EXISTS "BlocklistEntry_organizationId_active_kind_idx" ON "BlocklistEntry"("organizationId", "active", "kind");
+
   CREATE TABLE IF NOT EXISTS "Payout" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "organizationId" TEXT NOT NULL,
@@ -266,6 +330,22 @@ db.exec(`
 const productColumns = db.prepare('PRAGMA table_info("Product")').all();
 if (!productColumns.some((column) => column.name === "descriptionHtml")) {
   db.exec('ALTER TABLE "Product" ADD COLUMN "descriptionHtml" TEXT');
+}
+
+const commissionColumns = db.prepare('PRAGMA table_info("Commission")').all();
+if (!commissionColumns.some((column) => column.name === "ruleSource")) {
+  db.exec('ALTER TABLE "Commission" ADD COLUMN "ruleSource" TEXT NOT NULL DEFAULT \'CAMPAIGN\'');
+}
+if (!commissionColumns.some((column) => column.name === "calculationDetails")) {
+  db.exec('ALTER TABLE "Commission" ADD COLUMN "calculationDetails" JSON');
+}
+
+const conversionColumns = db.prepare('PRAGMA table_info("Conversion")').all();
+if (!conversionColumns.some((column) => column.name === "riskStatus")) {
+  db.exec('ALTER TABLE "Conversion" ADD COLUMN "riskStatus" TEXT NOT NULL DEFAULT \'CLEAR\'');
+}
+if (!conversionColumns.some((column) => column.name === "riskScore")) {
+  db.exec('ALTER TABLE "Conversion" ADD COLUMN "riskScore" INTEGER NOT NULL DEFAULT 0');
 }
 
 db.exec(`

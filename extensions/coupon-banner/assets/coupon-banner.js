@@ -54,10 +54,10 @@
       const root = window.Shopify?.routes?.root || "/";
       const cart = await fetch(`${root}cart/update.js`, {
         method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ attributes: { _cah_ref: ref }, discount: coupon }),
+        body: JSON.stringify({ attributes: { _cah_ref: ref, _cah_session: sessionKey }, discount: coupon }),
       });
       if (!cart.ok) throw new Error("Cart referral/discount update failed");
-      storage.set("cah_campaign", JSON.stringify({ ref, coupon, expiresAt: Date.now() + 2592000000 }));
+      storage.set("cah_campaign", JSON.stringify({ ref, coupon, sessionKey, expiresAt: Date.now() + 2592000000 }));
       document.cookie = `cah_ref=${encodeURIComponent(ref)}; Max-Age=2592000; Path=/; SameSite=Lax`;
       render(coupon, coupon ? "Affiliate visit tracked" : "Affiliate visit tracked · No campaign coupon");
     })

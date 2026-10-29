@@ -77,11 +77,51 @@ enum CommissionType {
   FIXED
 }
 
+enum CommissionRuleScope {
+  AFFILIATE
+  PRODUCT
+}
+
 enum CommissionStatus {
   PENDING
+  HELD
   APPROVED
   REVERSED
   PAID
+}
+
+enum FraudEventType {
+  BLOCKLIST_MATCH
+  MISSING_SESSION
+  CLICK_NOT_FOUND
+  CLICK_EXPIRED
+  REFERRAL_SWITCH
+  SESSION_VELOCITY
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FraudReviewStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+enum ConversionRiskStatus {
+  CLEAR
+  REVIEW
+  BLOCKED
+}
+
+enum BlocklistKind {
+  AFFILIATE
+  REFERRAL_CODE
+  SESSION
 }
 
 enum PayoutStatus {
@@ -129,8 +169,11 @@ model Organization {
   clicks            AffiliateClick[]
   conversions       Conversion[]
   commissions       Commission[]
+  commissionRules   CommissionRule[]
   payouts           Payout[]
   auditLogs         AuditLog[]
+  fraudEvents       FraudEvent[]
+  blocklistEntries  BlocklistEntry[]
 }
 
 model User {
@@ -190,6 +233,7 @@ model Product {
   syncedAt       DateTime        @default(now())
   store          Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
   contentTargets ContentTarget[]
+  commissionRules CommissionRule[]
 
   @@unique([storeId, shopifyId])
   @@index([organizationId, storeId])
@@ -275,7 +319,9 @@ model Affiliate {
   clicks         AffiliateClick[]
   conversions    Conversion[]
   commissions    Commission[]
+  commissionRules CommissionRule[]
   payouts        Payout[]
+  fraudEvents    FraudEvent[]
 
   @@unique([organizationId, email])
   @@unique([organizationId, code])
@@ -297,6 +343,7 @@ model Campaign {
   affiliateLinks  AffiliateLink[]
   clicks          AffiliateClick[]
   conversions     Conversion[]
+  commissionRules CommissionRule[]
 
   @@index([organizationId, status])
 }
@@ -334,6 +381,7 @@ model AffiliateClick {
   campaign        Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   affiliateLink   AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
   conversions     Conversion[]
+  fraudEvents     FraudEvent[]
 
   @@index([organizationId, clickedAt])
   @@index([sessionKey])
@@ -352,6 +400,8 @@ model Conversion {
   orderAmount    Decimal
   eligibleAmount Decimal
   status         ConversionStatus @default(PENDING)
+  riskStatus     ConversionRiskStatus @default(CLEAR)
+  riskScore      Int              @default(0)
   attributedAt   DateTime         @default(now())
   organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   store          Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
@@ -359,10 +409,51 @@ model Conversion {
   campaign       Campaign?        @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   click          AffiliateClick?  @relation(fields: [clickId], references: [id], onDelete: SetNull)
   commissions    Commission[]
+  fraudEvents    FraudEvent[]
 
   @@unique([storeId, shopifyOrderId])
   @@index([organizationId, status])
   @@index([affiliateId, attributedAt])
+}
+
+model FraudEvent {
+  id             String            @id @default(cuid())
+  organizationId String
+  affiliateId    String?
+  clickId        String?
+  conversionId   String?
+  type           FraudEventType
+  severity       FraudSeverity
+  score          Int
+  reason         String
+  evidence       Json?
+  status         FraudReviewStatus @default(OPEN)
+  createdAt      DateTime          @default(now())
+  resolvedAt     DateTime?
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  affiliate      Affiliate?        @relation(fields: [affiliateId], references: [id], onDelete: SetNull)
+  click          AffiliateClick?   @relation(fields: [clickId], references: [id], onDelete: SetNull)
+  conversion     Conversion?       @relation(fields: [conversionId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status, createdAt])
+  @@index([affiliateId, createdAt])
+  @@index([conversionId])
+}
+
+model BlocklistEntry {
+  id             String        @id @default(cuid())
+  organizationId String
+  kind           BlocklistKind
+  targetValue    String
+  label          String?
+  active         Boolean       @default(true)
+  expiresAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, kind, targetValue])
+  @@index([organizationId, active, kind])
 }
 
 model Commission {
@@ -375,6 +466,8 @@ model Commission {
   amount         Decimal
   currencyCode   String
   status         CommissionStatus @default(PENDING)
+  ruleSource     String           @default("CAMPAIGN")
+  calculationDetails Json?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -384,6 +477,33 @@ model Commission {
 
   @@index([organizationId, status])
   @@index([affiliateId, status])
+}
+
+model CommissionRule {
+  id             String              @id @default(cuid())
+  organizationId String
+  campaignId     String?
+  affiliateId    String?
+  productId      String?
+  name           String
+  scope          CommissionRuleScope
+  type           CommissionType
+  value          Decimal
+  priority       Int                 @default(100)
+  active         Boolean             @default(true)
+  startsAt       DateTime?
+  endsAt         DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaign       Campaign?           @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  affiliate      Affiliate?          @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  product        Product?            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, active, priority])
+  @@index([campaignId, active, priority])
+  @@index([affiliateId, active, priority])
+  @@index([productId, active, priority])
 }
 
 model Payout {

@@ -30,6 +30,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       eligibleAmount: Number(item.conversion.eligibleAmount).toFixed(2),
       status: item.status,
       orderStatus: item.conversion.status,
+      riskStatus: item.conversion.riskStatus,
+      riskScore: item.conversion.riskScore,
     })),
     payouts: payouts.map((item) => ({
       id: item.id,
@@ -120,6 +122,7 @@ export default function CommissionsPage() {
 
         <section className="merchant-kpi-grid merchant-kpi-grid--compact" aria-label="Commission summary">
           <article className="merchant-kpi merchant-kpi--attention"><span>Pending</span><strong>{statusCount("PENDING")}</strong><small>Waiting for review</small></article>
+          <article className="merchant-kpi merchant-kpi--attention"><span>Held</span><strong>{statusCount("HELD")}</strong><small>Fraud review required</small></article>
           <article className="merchant-kpi"><span>Approved</span><strong>{statusCount("APPROVED")}</strong><small>Ready for external payment</small></article>
           <article className="merchant-kpi"><span>Paid</span><strong>{statusCount("PAID")}</strong><small>Payments recorded</small></article>
           <article className="merchant-kpi"><span>Reversed</span><strong>{statusCount("REVERSED")}</strong><small>Blocked from payment</small></article>
@@ -144,6 +147,7 @@ export default function CommissionsPage() {
           return <article className="merchant-commission-card" key={item.id}>
             <div className="merchant-commission-head"><div><div className="merchant-commission-title"><strong>{item.affiliateName}</strong><span className={`merchant-status merchant-status--${item.status.toLowerCase()}`}>{item.status}</span></div><p>Order #{item.orderNumber}</p></div><div className="merchant-commission-amount"><span>Commission</span><strong>{item.currency} {item.amount}</strong></div></div>
             <div className="merchant-commission-detail"><span>Eligible subtotal <strong>{item.currency} {item.eligibleAmount}</strong></span><span>Order outcome <strong>{orderOutcome}</strong></span></div>
+            {item.status === "HELD" ? <div className="merchant-refund-warning"><strong>Fraud review required · Score {item.riskScore}/100</strong><span>Open Fraud protection and mark this order legitimate before approving its commission.</span></div> : null}
             {["REJECTED", "REFUNDED", "PARTIALLY_REFUNDED"].includes(item.orderStatus) ? (
               <div className="merchant-refund-warning"><strong>{item.orderStatus === "REJECTED" ? "Order cancelled" : "Refund recorded"}</strong><span>{item.status === "PAID" ? "Commission was already paid. Review and recover any overpayment manually." : "Payment is blocked. The original amount remains visible for reference."}</span></div>
             ) : null}

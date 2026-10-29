@@ -351,15 +351,42 @@ body {
 .merchant-theme-callout h3 { font-size: 1rem; margin: 0 0 6px; }
 .merchant-theme-callout p:not(.merchant-eyebrow) { color: #68746b; font-size: 0.82rem; margin: 0; }
 .merchant-theme-callout .merchant-button { align-items: center; display: inline-flex; flex: 0 0 auto; margin-left: 24px; text-decoration: none; }
+.merchant-rule-form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.merchant-rule-list { display: grid; gap: 11px; }
+.merchant-rule-card { align-items: center; background: #f9faf9; border: 1px solid #e2e7e3; border-radius: 13px; display: grid; gap: 16px; grid-template-columns: minmax(220px, 1fr) auto auto; padding: 16px; }
+.merchant-rule-card h4 { margin: 0; }
+.merchant-rule-card p { color: #758078; font-size: 0.75rem; margin: 6px 0 0; }
+.merchant-rule-value { display: grid; gap: 3px; min-width: 90px; text-align: right; }
+.merchant-rule-value strong { font-size: 1rem; }
+.merchant-rule-value span { color: #758078; font-size: 0.7rem; }
+.merchant-fraud-form-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.merchant-fraud-list { display: grid; gap: 12px; }
+.merchant-fraud-card { background: #f9faf9; border: 1px solid #e2e7e3; border-radius: 13px; padding: 17px; }
+.merchant-risk-score { display: grid; gap: 3px; text-align: right; }
+.merchant-risk-score span { color: #78827a; font-size: 0.7rem; }
+.merchant-risk-score strong { font-size: 1.05rem; }
+.merchant-fraud-signals { background: #fff7e3; border: 1px solid #f0dfae; border-radius: 9px; display: grid; gap: 8px; margin-top: 14px; padding: 12px; }
+.merchant-fraud-signals div { display: grid; gap: 2px; }
+.merchant-fraud-signals strong { color: #725500; font-size: 0.72rem; }
+.merchant-fraud-signals span { color: #765f21; font-size: 0.75rem; }
+.merchant-fraud-actions { display: flex; gap: 8px; margin-top: 14px; }
+.merchant-status--review, .merchant-status--held { background: #fff3cf; color: #795900; }
+.merchant-status--blocked { background: #fee9e7; color: #9d261f; }
 
 @media (max-width: 950px) {
   .merchant-campaign-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .merchant-rule-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .merchant-fraud-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .merchant-tracking-link { grid-template-columns: 1fr auto; }
   .merchant-tracking-link a { grid-column: 1 / -1; grid-row: 2; }
 }
 
 @media (max-width: 650px) {
   .merchant-campaign-form-grid { grid-template-columns: 1fr; }
+  .merchant-rule-form-grid { grid-template-columns: 1fr; }
+  .merchant-fraud-form-grid { grid-template-columns: 1fr; }
+  .merchant-rule-card { align-items: start; grid-template-columns: 1fr; }
+  .merchant-rule-value { text-align: left; }
   .merchant-campaign-header, .merchant-theme-callout { align-items: stretch; flex-direction: column; gap: 16px; }
   .merchant-campaign-metrics { justify-content: flex-start; }
   .merchant-campaign-metrics span { text-align: left; }

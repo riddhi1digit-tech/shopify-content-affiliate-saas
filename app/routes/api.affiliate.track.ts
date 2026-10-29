@@ -37,6 +37,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
   if (!link) return Response.json({ tracked: false }, { status: 404 });
 
+  const blocked = await db.blocklistEntry.findFirst({
+    where: {
+      organizationId: store.organizationId,
+      active: true,
+      targetValue: { in: [link.affiliateId, code, sessionKey].filter(Boolean) },
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+    },
+    select: { id: true },
+  });
+  if (blocked) {
+    return Response.json(
+      { tracked: false, blocked: true },
+      { status: 403, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const existing = sessionKey
     ? await db.affiliateClick.findFirst({
         where: { affiliateLinkId: link.id, sessionKey },
