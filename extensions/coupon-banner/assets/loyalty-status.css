@@ -1,0 +1,7 @@
+.cah-loyalty { align-items: center; background: linear-gradient(135deg,#f1f8f3,#fff); border: 1px solid #d8e8dd; border-radius: 14px; color: #17251c; display: flex; gap: 14px; margin: 14px 0; padding: 18px; }
+.cah-loyalty__icon { align-items: center; background: #16804d; border-radius: 12px; color: #fff; display: flex; flex: 0 0 44px; font-size: 20px; height: 44px; justify-content: center; }
+.cah-loyalty__body { display: grid; gap: 3px; }
+.cah-loyalty__body small { color: #16804d; font-size: 11px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+.cah-loyalty__body strong { font-size: 17px; }
+.cah-loyalty__body span { color: #667169; font-size: 13px; }
+.cah-loyalty--guest { background: #f7f9f7; }

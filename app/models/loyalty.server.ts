@@ -25,10 +25,11 @@ export async function awardOrderPoints(store: { id: string; organizationId: stri
   const amount = Number(order.subtotal_price ?? order.total_price ?? 0);
   const points = Math.floor(amount * Number(program.pointsPerCurrency) * Number(tier?.multiplier ?? 1));
   if (!Number.isFinite(amount) || amount < 0 || points <= 0) return { awarded: 0, reason: "zero" };
+  const nextTier = await db.vipTier.findFirst({ where: { organizationId: store.organizationId, threshold: { lte: customer.lifetimePoints + points } }, orderBy: { threshold: "desc" } });
   try {
     await db.$transaction([
       db.loyaltyTransaction.create({ data: { organizationId: store.organizationId, loyaltyCustomerId: customer.id, type: "EARN", points, shopifyOrderId: String(order.id), description: `Earned from Shopify order ${order.id}` } }),
-      db.loyaltyCustomer.update({ where: { id: customer.id }, data: { pointsBalance: { increment: points }, lifetimePoints: { increment: points }, tierId: tier?.id } }),
+      db.loyaltyCustomer.update({ where: { id: customer.id }, data: { pointsBalance: { increment: points }, lifetimePoints: { increment: points }, tierId: nextTier?.id } }),
     ]);
   } catch (error) {
     if (isUniqueConflict(error)) return { awarded: 0, reason: "duplicate" };

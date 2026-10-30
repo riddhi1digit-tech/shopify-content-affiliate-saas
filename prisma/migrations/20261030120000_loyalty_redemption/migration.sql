@@ -1,0 +1,2 @@
+ALTER TABLE "LoyaltyProgram" ADD COLUMN "redemptionPoints" INTEGER NOT NULL DEFAULT 100;
+ALTER TABLE "LoyaltyProgram" ADD COLUMN "redemptionValue" DECIMAL(65,30) NOT NULL DEFAULT 5;

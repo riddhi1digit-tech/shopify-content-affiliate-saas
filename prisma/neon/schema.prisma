@@ -584,6 +584,8 @@ model LoyaltyProgram {
   active            Boolean      @default(true)
   pointsPerCurrency Decimal      @default(1)
   pointsName        String       @default("Points")
+  redemptionPoints  Int          @default(100)
+  redemptionValue   Decimal      @default(5)
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
   organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)

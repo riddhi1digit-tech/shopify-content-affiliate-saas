@@ -242,6 +242,10 @@ body {
 .merchant-table-row { align-items: center; border-top: 1px solid #e9edea; display: grid; font-size: .78rem; gap: 12px; grid-template-columns: minmax(220px, 2fr) 1fr 1fr 1fr; min-width: 620px; padding: 12px 2px; }
 .merchant-table-head { border-top: 0; color: var(--cah-muted); font-size: .7rem; font-weight: 700; text-transform: uppercase; }
 .merchant-empty { display: grid; gap: 8px; justify-items: center; }
+.loyalty-tool-grid { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+.loyalty-redeem-card { align-content: start; background: #f1f8f3; border: 1px solid #d7eadf; border-radius: 13px; padding: 18px; }
+.loyalty-redeem-card p { color: var(--cah-muted); font-size: .76rem; line-height: 1.5; margin: 6px 0 0; }
+@media (max-width: 760px) { .loyalty-tool-grid { grid-template-columns: 1fr; } }
 
 /* Embedded merchant home */
 .merchant-dashboard { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }

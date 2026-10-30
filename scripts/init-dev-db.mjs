@@ -344,6 +344,14 @@ const conversionColumns = db.prepare('PRAGMA table_info("Conversion")').all();
 if (!conversionColumns.some((column) => column.name === "riskStatus")) {
   db.exec('ALTER TABLE "Conversion" ADD COLUMN "riskStatus" TEXT NOT NULL DEFAULT \'CLEAR\'');
 }
+
+const loyaltyProgramColumns = db.prepare('PRAGMA table_info("LoyaltyProgram")').all();
+if (loyaltyProgramColumns.length && !loyaltyProgramColumns.some((column) => column.name === "redemptionPoints")) {
+  db.exec('ALTER TABLE "LoyaltyProgram" ADD COLUMN "redemptionPoints" INTEGER NOT NULL DEFAULT 100');
+}
+if (loyaltyProgramColumns.length && !loyaltyProgramColumns.some((column) => column.name === "redemptionValue")) {
+  db.exec('ALTER TABLE "LoyaltyProgram" ADD COLUMN "redemptionValue" DECIMAL NOT NULL DEFAULT 5');
+}
 if (!conversionColumns.some((column) => column.name === "riskScore")) {
   db.exec('ALTER TABLE "Conversion" ADD COLUMN "riskScore" INTEGER NOT NULL DEFAULT 0');
 }
@@ -366,6 +374,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS "LoyaltyProgram" (
     "id" TEXT PRIMARY KEY NOT NULL, "organizationId" TEXT NOT NULL UNIQUE, "active" INTEGER NOT NULL DEFAULT 1,
     "pointsPerCurrency" DECIMAL NOT NULL DEFAULT 1, "pointsName" TEXT NOT NULL DEFAULT 'Points',
+    "redemptionPoints" INTEGER NOT NULL DEFAULT 100, "redemptionValue" DECIMAL NOT NULL DEFAULT 5,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" DATETIME NOT NULL
   );
   CREATE TABLE IF NOT EXISTS "VipTier" (

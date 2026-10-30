@@ -1,0 +1,29 @@
+{% if customer %}
+  <div class="cah-loyalty" data-cah-loyalty data-loading-text="{{ block.settings.loading_text | escape }}">
+    <div class="cah-loyalty__icon" aria-hidden="true">★</div>
+    <div class="cah-loyalty__body">
+      <small>{{ block.settings.eyebrow }}</small>
+      <strong data-cah-loyalty-title>{{ block.settings.loading_text }}</strong>
+      <span data-cah-loyalty-detail></span>
+    </div>
+  </div>
+{% else %}
+  <div class="cah-loyalty cah-loyalty--guest">
+    <div class="cah-loyalty__icon" aria-hidden="true">★</div>
+    <div class="cah-loyalty__body"><small>{{ block.settings.eyebrow }}</small><strong>{{ block.settings.guest_message }}</strong></div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Loyalty status",
+  "target": "section",
+  "stylesheet": "loyalty-status.css",
+  "javascript": "loyalty-status.js",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "Your rewards" },
+    { "type": "text", "id": "loading_text", "label": "Loading message", "default": "Loading your rewards…" },
+    { "type": "text", "id": "guest_message", "label": "Signed-out message", "default": "Sign in to view your points and VIP status." }
+  ]
+}
+{% endschema %}
