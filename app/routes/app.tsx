@@ -23,6 +23,7 @@ export default function App() {
         <s-link href="/app/affiliates">Affiliates</s-link>
         <s-link href="/app/affiliate-dashboard">Affiliate dashboard</s-link>
         <s-link href="/app/campaigns">Campaigns</s-link>
+        <s-link href="/app/loyalty">Loyalty</s-link>
         <s-link href="/app/commission-rules">Commission rules</s-link>
         <s-link href="/app/fraud">Fraud protection</s-link>
         <s-link href="/app/commissions">Commissions & payouts</s-link>

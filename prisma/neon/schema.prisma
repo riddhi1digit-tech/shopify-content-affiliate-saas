@@ -175,6 +175,10 @@ model Organization {
   auditLogs         AuditLog[]
   fraudEvents       FraudEvent[]
   blocklistEntries  BlocklistEntry[]
+  loyaltyProgram    LoyaltyProgram?
+  vipTiers          VipTier[]
+  loyaltyCustomers  LoyaltyCustomer[]
+  loyaltyTransactions LoyaltyTransaction[]
 }
 
 model User {
@@ -216,6 +220,7 @@ model Store {
   collections    Collection[]
   contents       Content[]
   conversions    Conversion[]
+  loyaltyCustomers LoyaltyCustomer[]
 
   @@index([organizationId])
 }
@@ -571,4 +576,64 @@ model AffiliateLoginLimit {
   id          String @id
   windowStart BigInt
   count       Int
+}
+
+model LoyaltyProgram {
+  id                String       @id @default(cuid())
+  organizationId    String       @unique
+  active            Boolean      @default(true)
+  pointsPerCurrency Decimal      @default(1)
+  pointsName        String       @default("Points")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model VipTier {
+  id             String            @id @default(cuid())
+  organizationId String
+  name           String
+  threshold      Int
+  multiplier     Decimal           @default(1)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customers      LoyaltyCustomer[]
+  @@unique([organizationId, name])
+  @@index([organizationId, threshold])
+}
+
+model LoyaltyCustomer {
+  id                String               @id @default(cuid())
+  organizationId    String
+  storeId           String
+  shopifyCustomerId String
+  email             String?
+  pointsBalance     Int                  @default(0)
+  lifetimePoints    Int                  @default(0)
+  tierId            String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  organization      Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  store             Store                @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  tier              VipTier?             @relation(fields: [tierId], references: [id], onDelete: SetNull)
+  transactions      LoyaltyTransaction[]
+  @@unique([storeId, shopifyCustomerId])
+  @@index([organizationId, pointsBalance])
+  @@index([tierId])
+}
+
+model LoyaltyTransaction {
+  id                String          @id @default(cuid())
+  organizationId    String
+  loyaltyCustomerId String
+  type              String
+  points            Int
+  shopifyOrderId    String?
+  description       String
+  createdAt         DateTime        @default(now())
+  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer          LoyaltyCustomer @relation(fields: [loyaltyCustomerId], references: [id], onDelete: Cascade)
+  @@unique([loyaltyCustomerId, shopifyOrderId, type])
+  @@index([organizationId, createdAt])
 }

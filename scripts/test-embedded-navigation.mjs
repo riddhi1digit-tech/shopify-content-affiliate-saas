@@ -11,6 +11,7 @@ const routeSources = [
   "app.affiliates.tsx",
   "app.affiliate-dashboard.tsx",
   "app.campaigns.tsx",
+  "app.loyalty.tsx",
   "app.commission-rules.tsx",
   "app.fraud.tsx",
   "app.commissions.tsx",
@@ -36,7 +37,7 @@ for (const target of internalTargets) {
 
 assert.deepEqual(
   [...internalTargets].sort(),
-  ["/app", "/app/affiliate-dashboard", "/app/affiliates", "/app/campaigns", "/app/commission-rules", "/app/commissions", "/app/content", "/app/fraud"].sort(),
+  ["/app", "/app/affiliate-dashboard", "/app/affiliates", "/app/campaigns", "/app/commission-rules", "/app/commissions", "/app/content", "/app/fraud", "/app/loyalty"].sort(),
   "Embedded navigation is missing or contains an unexpected route.",
 );
 

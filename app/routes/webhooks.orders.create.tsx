@@ -4,6 +4,7 @@ import db from "../db.server";
 import { calculateCommission } from "../models/commission-engine.server";
 import { assessOrderRisk } from "../models/fraud-protection.server";
 import { logWebhook } from "../models/webhook-log.server";
+import { awardOrderPoints } from "../models/loyalty.server";
 import { authenticate } from "../shopify.server";
 
 function isDuplicateOrder(error: unknown) {
@@ -28,6 +29,7 @@ type ShopifyOrder = {
     price?: string;
     total_discount?: string;
   }>;
+  customer?: { id?: number | string; email?: string | null } | null;
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -41,17 +43,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   )?.value?.slice(0, 100) ?? "";
 
   logWebhook(request, "received", { topic, shop });
-  if (!referralCode) {
-    logWebhook(request, "ignored_missing_referral", { topic, shop });
-    return new Response();
-  }
-
   const store = await db.store.findUnique({
     where: { shopDomain: shop },
     include: { organization: { select: { attributionDays: true } } },
   });
   if (!store) {
     logWebhook(request, "ignored_unknown_store", { topic, shop });
+    return new Response();
+  }
+
+  const loyalty = await awardOrderPoints(store, order);
+  if (!referralCode) {
+    logWebhook(request, "processed_loyalty_only", { topic, shop, orderId: String(order.id), loyaltyPoints: loyalty.awarded });
     return new Response();
   }
 

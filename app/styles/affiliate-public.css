@@ -226,6 +226,23 @@ body {
   .merchant-dashboard-link-body .merchant-button { justify-self: start; }
 }
 
+/* Loyalty and VIP program */
+.merchant-alert { border: 1px solid #d6e7dc; border-radius: 11px; font-size: .78rem; padding: 12px 14px; }
+.merchant-alert--success { background: #edf8f1; color: #12643c; }
+.merchant-alert--error { background: #fff0ee; border-color: #f0d0cc; color: #9d261f; }
+.merchant-check { align-items: center; display: flex !important; gap: 9px !important; }
+.merchant-check input { min-height: auto !important; width: auto; }
+.loyalty-tier-list { display: grid; gap: 8px; margin-top: 18px; }
+.loyalty-tier-list > div { align-items: center; background: #f7f9f7; border: 1px solid #e6ebe7; border-radius: 10px; display: flex; justify-content: space-between; padding: 10px 12px; }
+.loyalty-tier-list span { display: grid; gap: 3px; }
+.loyalty-tier-list small { color: var(--cah-muted); }
+.merchant-button--ghost { background: transparent; color: #69736b; min-height: 32px; }
+.merchant-button--ghost:hover { background: #edf1ee; }
+.merchant-table { display: grid; overflow-x: auto; }
+.merchant-table-row { align-items: center; border-top: 1px solid #e9edea; display: grid; font-size: .78rem; gap: 12px; grid-template-columns: minmax(220px, 2fr) 1fr 1fr 1fr; min-width: 620px; padding: 12px 2px; }
+.merchant-table-head { border-top: 0; color: var(--cah-muted); font-size: .7rem; font-weight: 700; text-transform: uppercase; }
+.merchant-empty { display: grid; gap: 8px; justify-items: center; }
+
 /* Embedded merchant home */
 .merchant-dashboard { color: #202520; display: grid; gap: 18px; padding-bottom: 28px; }
 .merchant-hero { align-items: center; background: linear-gradient(130deg, #f1f8f3, #f8faf8); border: 1px solid #dfe8e1; border-radius: 16px; display: flex; justify-content: space-between; padding: 26px; }

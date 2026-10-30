@@ -363,6 +363,30 @@ db.exec(`
     "windowStart" BIGINT NOT NULL,
     "count" INTEGER NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS "LoyaltyProgram" (
+    "id" TEXT PRIMARY KEY NOT NULL, "organizationId" TEXT NOT NULL UNIQUE, "active" INTEGER NOT NULL DEFAULT 1,
+    "pointsPerCurrency" DECIMAL NOT NULL DEFAULT 1, "pointsName" TEXT NOT NULL DEFAULT 'Points',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" DATETIME NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS "VipTier" (
+    "id" TEXT PRIMARY KEY NOT NULL, "organizationId" TEXT NOT NULL, "name" TEXT NOT NULL, "threshold" INTEGER NOT NULL,
+    "multiplier" DECIMAL NOT NULL DEFAULT 1, "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" DATETIME NOT NULL
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS "VipTier_organizationId_name_key" ON "VipTier"("organizationId", "name");
+  CREATE INDEX IF NOT EXISTS "VipTier_organizationId_threshold_idx" ON "VipTier"("organizationId", "threshold");
+  CREATE TABLE IF NOT EXISTS "LoyaltyCustomer" (
+    "id" TEXT PRIMARY KEY NOT NULL, "organizationId" TEXT NOT NULL, "storeId" TEXT NOT NULL, "shopifyCustomerId" TEXT NOT NULL,
+    "email" TEXT, "pointsBalance" INTEGER NOT NULL DEFAULT 0, "lifetimePoints" INTEGER NOT NULL DEFAULT 0, "tierId" TEXT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" DATETIME NOT NULL
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS "LoyaltyCustomer_storeId_shopifyCustomerId_key" ON "LoyaltyCustomer"("storeId", "shopifyCustomerId");
+  CREATE INDEX IF NOT EXISTS "LoyaltyCustomer_organizationId_pointsBalance_idx" ON "LoyaltyCustomer"("organizationId", "pointsBalance");
+  CREATE TABLE IF NOT EXISTS "LoyaltyTransaction" (
+    "id" TEXT PRIMARY KEY NOT NULL, "organizationId" TEXT NOT NULL, "loyaltyCustomerId" TEXT NOT NULL, "type" TEXT NOT NULL,
+    "points" INTEGER NOT NULL, "shopifyOrderId" TEXT, "description" TEXT NOT NULL, "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS "LoyaltyTransaction_customer_order_type_key" ON "LoyaltyTransaction"("loyaltyCustomerId", "shopifyOrderId", "type");
+  CREATE INDEX IF NOT EXISTS "LoyaltyTransaction_organization_createdAt_idx" ON "LoyaltyTransaction"("organizationId", "createdAt");
 `);
 db.close();
 console.log(`Local development database ready: ${databasePath}`);
