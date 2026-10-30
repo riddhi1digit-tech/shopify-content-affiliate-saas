@@ -4,6 +4,7 @@ import { useFetcher, useLoaderData } from "react-router";
 import db from "../db.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
 import { authenticate } from "../shopify.server";
+import { PageIntro } from "../components/PageIntro";
 
 type ActionResult =
   | { success: true; message: string }
@@ -160,6 +161,7 @@ export default function CommissionRulesPage() {
   return (
     <s-page heading="Commission rules">
       <div className="merchant-campaigns">
+        <PageIntro icon="commission" eyebrow="Earning logic" title="Advanced commission rules" description="Prioritize affiliate and product rates with predictable campaign fallbacks and scheduled activation." />
         {submitter.data?.success ? <s-banner tone="success">{submitter.data.message}</s-banner> : null}
         {submitter.data && !submitter.data.success ? <s-banner tone="critical">{submitter.data.error}</s-banner> : null}
 

@@ -3,6 +3,7 @@ import { useFetcher, useLoaderData } from "react-router";
 import db from "../db.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
 import { authenticate } from "../shopify.server";
+import { PageIntro } from "../components/PageIntro";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { session } = await authenticate.admin(request);
@@ -114,6 +115,7 @@ export default function CommissionsPage() {
   return (
     <s-page heading="Commissions & manual payouts">
       <div className="merchant-commissions">
+        <PageIntro icon="commission" eyebrow="Payout operations" title="Review and record commissions" description="Approve eligible earnings, capture external payment references and preserve a complete payout audit trail." />
         {manager.data?.error ? (
           <s-banner tone="critical">{manager.data.error}</s-banner>
         ) : manager.data?.message ? (

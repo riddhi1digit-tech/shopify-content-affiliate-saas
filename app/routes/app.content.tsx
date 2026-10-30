@@ -5,6 +5,7 @@ import { useFetcher, useLoaderData } from "react-router";
 import db from "../db.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
 import { authenticate } from "../shopify.server";
+import { PageIntro } from "../components/PageIntro";
 
 type WorkflowResult =
   { success: true; message: string } | { success: false; error: string };
@@ -185,6 +186,7 @@ export default function ContentPage() {
   return (
     <s-page heading="Content workflow">
       <div className="merchant-content-workflow">
+        <PageIntro icon="content" eyebrow="Content operations" title="Draft, approve and publish" description="Keep product content changes controlled, reviewable and synchronized with Shopify." />
         {workflow.data?.success ? (
           <s-banner tone="success">{workflow.data.message}</s-banner>
         ) : workflow.data && !workflow.data.success ? (

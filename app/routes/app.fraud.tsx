@@ -4,6 +4,7 @@ import { useFetcher, useLoaderData } from "react-router";
 import db from "../db.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
 import { authenticate } from "../shopify.server";
+import { PageIntro } from "../components/PageIntro";
 
 type ActionResult = { message?: string; error?: string };
 
@@ -172,6 +173,7 @@ export default function FraudPage() {
 
   return <s-page heading="Fraud protection">
     <div className="merchant-commissions">
+      <PageIntro icon="shield" eyebrow="Risk controls" title="Protect referral revenue" description="Review suspicious attribution, release legitimate commissions and block abusive referral traffic." />
       {manager.data?.error ? <s-banner tone="critical">{manager.data.error}</s-banner> : null}
       {manager.data?.message ? <s-banner tone="success">{manager.data.message}</s-banner> : null}
 

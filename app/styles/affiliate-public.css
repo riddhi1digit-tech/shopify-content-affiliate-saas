@@ -571,3 +571,53 @@ button, input, select, textarea { font: inherit; }
   .merchant-funnel-row { grid-template-columns: 1fr auto; }
   .merchant-funnel-row > div { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* Consistent identity for every embedded app option */
+.merchant-page-intro {
+  align-items: center;
+  background: var(--cah-surface);
+  border: 1px solid var(--cah-border);
+  border-radius: var(--cah-radius-lg);
+  box-shadow: var(--cah-shadow-sm);
+  display: flex;
+  gap: 16px;
+  overflow: hidden;
+  padding: 22px 24px;
+  position: relative;
+}
+.merchant-page-intro::after {
+  background: var(--cah-brand-soft);
+  border-radius: 999px;
+  content: "";
+  height: 130px;
+  opacity: .8;
+  pointer-events: none;
+  position: absolute;
+  right: -54px;
+  top: -72px;
+  width: 130px;
+}
+.merchant-page-intro > * { position: relative; z-index: 1; }
+.merchant-page-intro-icon {
+  align-items: center;
+  background: var(--cah-brand-soft);
+  border: 1px solid #d7eadf;
+  border-radius: 13px;
+  color: var(--cah-brand);
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 46px;
+  justify-content: center;
+  width: 46px;
+}
+.merchant-page-intro .merchant-eyebrow { margin-bottom: 5px; }
+.merchant-page-intro h2 { font-size: clamp(1.2rem,2vw,1.55rem); letter-spacing: -.035em; line-height: 1.15; margin: 0 0 6px; }
+.merchant-page-intro p:not(.merchant-eyebrow) { color: var(--cah-muted); font-size: .8rem; line-height: 1.5; margin: 0; max-width: 760px; }
+.merchant-selector-heading { align-items: center; display: flex; gap: 15px; }
+.merchant-selector-heading .merchant-page-intro-icon { height: 44px; width: 44px; }
+
+@media (max-width: 620px) {
+  .merchant-page-intro { align-items: flex-start; padding: 19px; }
+  .merchant-page-intro-icon { height: 40px; width: 40px; }
+  .merchant-selector-heading { align-items: flex-start; }
+}

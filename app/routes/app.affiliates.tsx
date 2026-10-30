@@ -6,6 +6,7 @@ import { provisionMerchant } from "../models/merchant-onboarding.server";
 import { authenticate } from "../shopify.server";
 import { createAffiliateInvite, privateHeaders } from "../models/affiliate-access.server";
 import { emailConfiguration, sendAffiliateLoginEmail } from "../models/affiliate-email.server";
+import { PageIntro } from "../components/PageIntro";
 
 export const headers = privateHeaders;
 
@@ -167,6 +168,7 @@ export default function AffiliatesPage() {
   return (
     <s-page heading="Affiliates">
       <div className="merchant-affiliates">
+        <PageIntro icon="affiliate" eyebrow="Partner network" title="Manage your affiliates" description="Create partner profiles, control account access and issue secure portal invitations." />
         {manager.data?.success ? (
           <s-banner tone="success">{manager.data.message}</s-banner>
         ) : manager.data && !manager.data.success ? (

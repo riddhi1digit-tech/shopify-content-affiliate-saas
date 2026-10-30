@@ -3,6 +3,7 @@ import { Form, Link, useLoaderData } from "react-router";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
+import { AppIcon } from "../components/AppIcon";
 
 function referralUrl(targetUrl: string, code: string, coupon: string | null) {
   const url = new URL(targetUrl);
@@ -51,7 +52,7 @@ export default function AffiliateDashboard() {
   return <s-page heading="Affiliate dashboard">
     <div className="merchant-affiliate-dashboard">
       <section className="merchant-affiliate-selector">
-        <div><p className="merchant-eyebrow">Merchant view</p><h2>Affiliate performance</h2><p>Review the same performance data affiliates see in their secure portal.</p></div>
+        <div className="merchant-selector-heading"><span className="merchant-page-intro-icon"><AppIcon name="chart" size={23} /></span><div><p className="merchant-eyebrow">Merchant view</p><h2>Affiliate performance</h2><p>Review the same performance data affiliates see in their secure portal.</p></div></div>
         {affiliates.length ? <Form method="get" className="merchant-selector-form">
           <label><span>Affiliate</span><select name="affiliateId" defaultValue={affiliate?.id} key={affiliate?.id}>{affiliates.map((item) => <option key={item.id} value={item.id}>{item.name} ({item.code})</option>)}</select></label>
           <button className="merchant-button merchant-button--primary" type="submit">View dashboard</button>

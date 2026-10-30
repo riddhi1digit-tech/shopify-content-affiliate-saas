@@ -7,6 +7,7 @@ import { useFetcher, useLoaderData } from "react-router";
 import db from "../db.server";
 import { provisionMerchant } from "../models/merchant-onboarding.server";
 import { authenticate } from "../shopify.server";
+import { PageIntro } from "../components/PageIntro";
 
 type ActionResult =
   { success: true; message: string } | { success: false; error: string };
@@ -234,6 +235,7 @@ export default function CampaignsPage() {
   return (
     <s-page heading="Campaigns">
       <div className="merchant-campaigns">
+        <PageIntro icon="campaign" eyebrow="Growth programs" title="Campaigns and tracking links" description="Launch measurable partner promotions with commission rules, referral links and Shopify discounts." />
         {creator.data?.success ? (
           <s-banner tone="success">{creator.data.message}</s-banner>
         ) : creator.data && !creator.data.success ? (
